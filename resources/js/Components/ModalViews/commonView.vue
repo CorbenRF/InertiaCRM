@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable -->
-  <form class="interface__info" @submit.prevent="submitForm">
+  <form class="interface__info" @submit.prevent="submitForm" v-if="this.loadingFinished">
     <div class="info__wrapper grid">
       <div class="g-col-6 g-col-lg-4 d-flex flex-column">
         <label class="form-label" for="client_entry_num">Входящий номер заявки</label>
@@ -190,18 +190,22 @@
       </div>
 
       <div class="g-col-6 g-col-lg-4 d-flex flex-column">
-        <label class="form-label" for="client_entry_num">Уровень инспекции</label>
-        <input
-          class="form-control"
-          :class="{ 'multiselect--disabled': readOnly }"
-          type="number"
-          name="inspection_lvl"
-          id="inspection_lvl"
-          :readonly="readOnly"
-          placeholder="Введите уровень инспекции (1-3)"
-          v-model="data.inspection_lvl"
-        />
+        <label class="form-label" for="inspection_lvl">Уровень инспекции</label>
+        <multiSelect
+          v-model="this.inspection_lvl"
+          :label="`Выберите Уровень Инспекции`"
+          :readOnly="this.readOnly"
+          :name="`inspection_lvl`"
+          :catalogue="this.inspection_levels"
+          :catalogueRuName="`Уровень Инспекции`"
+          :catalogueName="`inspection_levels`"
+          item="inspection_lvl"
+          :taggable="false"
+          @update-data="setDataParam"
+        >
+        </multiSelect>
       </div>
+
     </div>
     <button type="submit" class="btn btn-lg btn-success" v-if="!readOnly">
       {{ data.id ? 'Применить' : 'Создать' }}
@@ -210,10 +214,16 @@
       <span>{{ item }}</span>
     </div>
   </form>
+  <div class="interface__info" v-else>
+    <div class="spinner-border text-primary" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+  </div>
 </template>
 
 <script>
 /* eslint-disable */
+import axios from 'axios';
 import dateFunc from '@/mixins/dateFunc.vue';
 import serverFunc from '@/mixins/serverFunc.vue';
 import multiSelect from '@/components/UI/multiSelect.vue';
@@ -230,23 +240,23 @@ export default {
       errorVisible: false,
       serverOutput: [],
       validationResult: '',
+      cataloguesData: [],
+      inspection_levels: [{id: 0, name: '1'},
+      {id: 1, name: '2'},
+      {id: 2, name: '3'}],
+      inspection_lvl: { id: this.data.inspection_lvl -1, name: this.data.inspection_lvl}
     };
   },
   computed: {
-    cataloguesData() {
-      return this.$store.state.catalogues;
-    },
+
   },
   methods: {
-    checkNewCatEntries(arg) {
-      let isNewlyCreated = true;
-      console.log(arg.slice(0, -1));
-      this.cataloguesData[arg].forEach((o) => {
-        if (o.name === this.data[`${arg.slice(0, -1)}Name`]) {
-          isNewlyCreated = false; // false means that submitted entry from select exists in catalogue i.e. not new
-        }
-      });
-      return isNewlyCreated;
+    async fetchCatalogues(url) {
+        this.cataloguesData = await axios.get(url, {
+                    onSuccess: (res) => {
+                         res.catalogues.data;
+                    }
+                })
     },
     deorganiseData(obj) {
       if (obj) {
@@ -351,9 +361,13 @@ export default {
       'inspectors',
     ];
 
-    // catsArr.forEach((item) =>
-    //   this.$store.dispatch('fetchCatalogue', item).then((this.loadingFinished = true)),
-    // );
+    axios.get(this.route('catalogues.get'))
+    .then((response) => {
+        this.cataloguesData = response.data.catalogues;
+        this.loadingFinished = true;
+        console.log(response.data.catalogues);
+    });
+    // this.fetchCatalogues(this.route('catalogues.get'))
   },
 };
 </script>

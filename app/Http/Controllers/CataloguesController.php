@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\catalogues;
+use App\Models\Catalogue;
+use App\Models\Department;
+use App\Models\Client;
+use App\Models\Curator;
+use App\Models\Inspector;
+use App\Models\Status;
+use App\Models\Subvendor;
+use App\Models\Vendor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -15,9 +22,22 @@ class CataloguesController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Catalogues/Index', [
+    }
 
-        ]);
+    public function get(Request $request)
+    {
+        $catalogues = [
+            'catalogues' => [
+                'departments' => Department::all(),
+                'clients' => Client::all(),
+                'curators' => Curator::all(),
+                'inspectors' => Inspector::all(),
+                'statuses' => Status::all(),
+                'vendors' => Vendor::all(),
+                'subvendors' => Subvendor::all(),
+            ]
+            ];
+        return response()->json($catalogues);
     }
 
     /**
@@ -39,9 +59,9 @@ class CataloguesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(catalogues $catalogues)
+    public function show(Catalogue $catalogue)
     {
-        //
+
     }
 
     /**

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 
 class EntryController extends Controller
 {
@@ -70,7 +71,13 @@ class EntryController extends Controller
         return Inertia::render('Entries/Index', [
             'entries' => $entries, // entries from here pass as props down to Index.vue
             'catalogues' => [
-                'departments' => Department::all()
+                'departments' => Department::all(),
+                'clients' => Client::all(),
+                'curators' => Curator::all(),
+                'inspectors' => Inspector::all(),
+                'statuses' => Status::all(),
+                'vendors' => Vendor::all(),
+                'subvendors' => Subvendor::all(),
             ]
         ]);
     }
@@ -78,6 +85,22 @@ class EntryController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+
+    //  public function catalogues(): Response
+    //  {
+    //     return Inertia::render('Entries/catalogues', [
+    //         'catalogues' => [
+    //             'departments' => Department::all(),
+    //             'clients' => Client::all(),
+    //             'curators' => Curator::all(),
+    //             'inspectors' => Inspector::all(),
+    //             'statuses' => Status::all(),
+    //             'vendors' => Vendor::all(),
+    //             'subvendors' => Subvendor::all(),
+    //         ]
+    //     ]);
+    //  }
+
     public function create()
     {
         return Inertia::render('Entries/Create');

@@ -43,9 +43,9 @@ Route::get('/dashboard', function () {
 //     return Inertia::render('History');
 // })->middleware(['auth', 'verified'])->name('history');
 
-// Route::get('/catalogues', function () {
-//     return Inertia::render('Catalogues');
-// })->middleware(['auth', 'verified'])->name('catalogues');
+Route::get('/catalogues', function () {
+    return Inertia::render('Catalogues');
+})->middleware(['auth', 'verified'])->name('catalogues');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -57,14 +57,18 @@ Route::get('history', [HistoryController::class, 'index'])
     ->name('history')
     ->middleware('auth');
 
-    Route::get('catalogues', [CataloguesController::class, 'index'])
-    ->name('catalogues')
+    Route::get('catalogues/get', [CataloguesController::class, 'get'])
+    ->name('catalogues.get')
     ->middleware('auth');
 // Entries
 
 Route::get('entries', [EntryController::class, 'index'])
     ->name('entries')
     ->middleware('auth');
+
+// Route::get('entries/catalogues', [EntryController::class, 'catalogues'])
+//     ->name('entries.catalogues')
+//     ->middleware('auth');
 
 Route::get('entries/create', [EntryController::class, 'create'])
     ->name('entries.create')
