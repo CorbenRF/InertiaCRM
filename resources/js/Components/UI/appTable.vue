@@ -207,9 +207,9 @@ export default {
     closeModal() {
       this.modalVisible = false;
     },
-    async deleteEntry(valId) {
-      console.log('deleting entry number: ', valId);
-      console.log(await this.deleteCatalogueEntry('entries', valId));
+    deleteEntry(entryToDelete) {
+      console.log('deleting entry number: ', entryToDelete);
+      this.$inertia.delete(`/entries/${entryToDelete}`);
       this.closeModal();
       this.forceRerender();
     },

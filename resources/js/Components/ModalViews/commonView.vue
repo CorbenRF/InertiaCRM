@@ -251,12 +251,14 @@ export default {
 
   },
   methods: {
-    async fetchCatalogues(url) {
-        this.cataloguesData = await axios.get(url, {
-                    onSuccess: (res) => {
-                         res.catalogues.data;
-                    }
-                })
+    fetchCatalogues() {
+      this.loadingFinished = false;
+      axios.get(this.route('catalogues.get'))
+    .then((response) => {
+        this.cataloguesData = response.data.catalogues;
+        this.loadingFinished = true;
+        console.log(response.data.catalogues);
+    });
     },
     deorganiseData(obj) {
       if (obj) {
@@ -286,7 +288,7 @@ export default {
       if (!formData.client_entry_num || formData.client_entry_num.length > 30) {
         resultMsg.push('Входящий номер заявки должен быть не пустым и не больше 30 символов \n');
       }
-      if (!formData.client_name_id) {
+      if (!formData.client) {
         resultMsg.push('Выберите из списка или создайте нового Заказчика \n');
       }
       if (!formData.date_received) {
@@ -295,13 +297,13 @@ export default {
       if (!formData.date_startby) {
         resultMsg.push('Укажите дату начала инспекции из заявки \n');
       }
-      if (!formData.department_id) {
+      if (!formData.department) {
         resultMsg.push('Выберите УИК из списка \n');
       }
-      if (!formData.subvendor_name_id) {
+      if (!formData.subvendor) {
         resultMsg.push('Выберите из списка или создайте новую ПП \n');
       }
-      if (!formData.vendor_name_id) {
+      if (!formData.vendor) {
         resultMsg.push('Выберите из списка или создайте нового Поставщика \n');
       }
       if (formData.inspection_lvl < 1 || formData.inspection_lvl > 3) {
@@ -313,16 +315,29 @@ export default {
     },
     async submitForm() {
       this.serverOutput = [];
-      const dataToSend = this.deorganiseData(this.data);
+      const dataToSend = this.data;
       console.log('data to send: ', dataToSend);
       this.validationResult = this.validateForm(dataToSend);
       if (this.data.id) {
         if (this.validationResult.length > 0) {
           this.serverOutput = this.validationResult;
         } else {
-          const res = await this.updateForm('entriesView', dataToSend, this.data.id);
-          this.serverOutput.push(res);
-          this.$emit('update');
+            // this.$inertia.form(dataToSend).put(`/entries/${this.data.id}`);
+            this.$inertia.put(`/entries/${this.data.id}`, { ...this.data,
+                'client_name_id': this.data.client.id,
+                'department_id': this.data.department.id,
+                'vendor_name_id': this.data.vendor.id,
+                'subvendor_name_id': this.data.subvendor.id,
+                'status_id': this.data.status.id,
+                'curator_id': this.data.curator.id,
+                'inspector_id': this.data.inspector.id,
+                'date_received': this.makeStandardDate(this.data.date_received),
+                'date_startby': this.makeStandardDate(this.data.date_startby),
+                'date_actual_start': this.makeStandardDate(this.data.date_actual_start),
+                'date_end': this.makeStandardDate(this.data.date_end),
+                'inspection_lvl': Number(this.inspection_lvl.name),
+            });
+        //   this.$emit('update'); might break something
           this.$emit('toggleReadOnly');
         }
       } else {
@@ -350,24 +365,7 @@ export default {
     },
   },
   mounted() {
-    // this.dataCopy = this.data;
-    const catsArr = [
-      'departments',
-      'clients',
-      'vendors',
-      'subvendors',
-      'statuses',
-      'curators',
-      'inspectors',
-    ];
-
-    axios.get(this.route('catalogues.get'))
-    .then((response) => {
-        this.cataloguesData = response.data.catalogues;
-        this.loadingFinished = true;
-        console.log(response.data.catalogues);
-    });
-    // this.fetchCatalogues(this.route('catalogues.get'))
+    this.fetchCatalogues();
   },
 };
 </script>

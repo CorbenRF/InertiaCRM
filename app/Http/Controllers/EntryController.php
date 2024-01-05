@@ -173,13 +173,21 @@ class EntryController extends Controller
     public function update(Entry $entry)
     {
         $entry->update(
+
             Request::validate([
                 'client_entry_num' => ['required', 'max:50'], // todo: unique entry_num as well as client_name
-                'date_received' => ['required', 'date', 'date_format:d.m.Y'],
-                'date_startby' => ['date', 'date_format:d.m.Y'],
-                'date_actual_start' => ['date', 'date_format:d.m.Y'],
-                'date_end' => ['date', 'date_format:d.m.Y'],
-                'inspection_lvl' => ['nullable', 'max:3'],
+                'client_name_id' => ['required'],
+                'department_id' => ['required'],
+                'vendor_name_id' => ['required'],
+                'subvendor_name_id' => ['required'],
+                'status_id' => ['required'],
+                'curator_id' => ['required'],
+                'inspector_id' => ['required'],
+                'date_received' => ['required', 'date'],
+                'date_startby' => ['nullable', 'date'],
+                'date_actual_start' => ['nullable', 'date'],
+                'date_end' => ['nullable', 'date'],
+                'inspection_lvl' => ['required'],
             ])
         );
 
