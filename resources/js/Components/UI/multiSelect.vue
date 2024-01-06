@@ -85,15 +85,18 @@ export default {
           id: 0,
         };
         this.innerLoading = true;
-        const result = await this.createCatalogueEntry(this.catalogueName, tag);
-        console.log(result);
-        this.$store
-          .dispatch('fetchCatalogue', this.catalogueName)
-          .then((this.innerLoading = false));
-        this.$emit('update-data', this.item, {
-          name: this.tagToCreate,
-          id: result.id,
+
+        const result = axios.post(this.route(`${this.catalogueName}`), tag)
+        .then((response) => {
+            this.innerLoading = false;
+            console.log('result of inertia posting is: ', response.data);
+            console.log('tag to create is: ', this.tagToCreate);
+            this.$emit('update-data', this.item, {
+                name: tag.name,
+                id: response.data.inserted_id,
         });
+    });
+
       }
       this.tagToCreate = '';
     },

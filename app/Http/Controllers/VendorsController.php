@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\vendors;
-use Illuminate\Http\Request;
+use App\Models\Vendor;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
 
 class VendorsController extends Controller
 {
@@ -28,7 +31,12 @@ class VendorsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $id = Vendor::create(
+            Request::validate([
+                'name' => ['required', 'max:50', 'unique:vendors'],
+            ])
+        )->id;
+        return response()->json(array('success' => true, 'inserted_id' => $id), 200);
     }
 
     /**

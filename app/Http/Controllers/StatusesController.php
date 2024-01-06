@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\statuses;
-use Illuminate\Http\Request;
+use App\Models\Status;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
 
 class StatusesController extends Controller
 {
@@ -28,7 +31,12 @@ class StatusesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $id = Status::create(
+            Request::validate([
+                'name' => ['required', 'max:50', 'unique:statuses'],
+            ])
+        )->id;
+        return response()->json(array('success' => true, 'inserted_id' => $id), 200);
     }
 
     /**

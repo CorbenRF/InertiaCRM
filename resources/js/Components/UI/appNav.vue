@@ -1,7 +1,8 @@
 <!-- eslint-disable -->
 <template>
+    <div>
   <nav class="container">
-    <!-- <div class="d-flex flex-wrap align-items-center justify-content-center"> -->
+    <div class="d-flex flex-wrap align-items-center justify-content-center">
     <ul class="nav col-12 col-lg-auto my-2 justify-content-around my-md-0">
       <li>
         <div @click="this.modalVisible = true" class="nav-link text-secondary">
@@ -98,20 +99,23 @@
       </li>
 
     </ul>
-    <!-- </div> -->
+    </div>
   </nav>
-  <!-- <tableModal v-if="modalVisible" :id="0" :readOnlyDefault="false" @close="closeModal" /> -->
+  <tableModal
+      v-if="modalVisible"
+      :id="0"
+      :readOnlyDefault="false"
+      @close="closeModal"
+    />
+</div>
 </template>
 
 <script>
 import { Link } from '@inertiajs/vue3';
-// import tableModal from '@/components/UI/tableModal.vue';
+// import tableModal from './tableModal.vue';
 
 export default {
-//   components: { tableModal },
-components: {
-    Link,
-  },
+components: { Link, tableModal },
   data() {
     return {
       loadingFinished: false,

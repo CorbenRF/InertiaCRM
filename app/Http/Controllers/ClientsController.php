@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\clients;
-use Illuminate\Http\Request;
+use App\Models\Client;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
 
 class ClientsController extends Controller
 {
@@ -28,7 +31,12 @@ class ClientsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $id = Client::create(
+            Request::validate([
+                'name' => ['required', 'max:50', 'unique:clients'],
+            ])
+        )->id;
+        return response()->json(array('success' => true, 'inserted_id' => $id), 200);
     }
 
     /**

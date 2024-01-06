@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\curators;
-use Illuminate\Http\Request;
+use App\Models\Curator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
 
 class CuratorsController extends Controller
 {
@@ -28,7 +31,12 @@ class CuratorsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $id = Curator::create(
+            Request::validate([
+                'name' => ['required', 'max:50', 'unique:curators'],
+            ])
+        )->id;
+        return response()->json(array('success' => true, 'inserted_id' => $id), 200);
     }
 
     /**

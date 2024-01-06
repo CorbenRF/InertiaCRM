@@ -306,9 +306,9 @@ export default {
       if (!formData.vendor) {
         resultMsg.push('Выберите из списка или создайте нового Поставщика \n');
       }
-      if (formData.inspection_lvl < 1 || formData.inspection_lvl > 3) {
-        resultMsg.push('Укажите уровень инспекции (1-3) \n');
-      }
+    //   if (formData.inspection_lvl < 1 || formData.inspection_lvl > 3) { //problem with creating a new entry and ins_lvl being null
+    //     resultMsg.push('Укажите уровень инспекции (1-3) \n');
+    //   }
 
       if (resultMsg.length > 0) return resultMsg;
       else return [];
@@ -344,9 +344,23 @@ export default {
         if (this.validationResult.length > 0) {
           this.serverOutput = this.validationResult;
         } else {
-          const res = await this.postForm('entriesView', dataToSend);
-          this.serverOutput.push(res.message);
-          this.data.id = res.id;
+        //   const res = await this.postForm('entriesView', dataToSend);
+        console.log('sending form: ', this.data);
+        this.$inertia.post(`/entries`, { ...this.data,
+                'client_name_id': this.data.client.id,
+                'department_id': this.data.department.id,
+                'vendor_name_id': this.data.vendor.id,
+                'subvendor_name_id': this.data.subvendor.id,
+                'status_id': this.data.status.id,
+                'curator_id': this.data.curator.id,
+                'inspector_id': this.data.inspector.id,
+                'date_received': this.makeStandardDate(this.data.date_received),
+                'date_startby': this.makeStandardDate(this.data.date_startby),
+                'date_actual_start': this.makeStandardDate(this.data.date_actual_start),
+                'date_end': this.makeStandardDate(this.data.date_end),
+                'inspection_lvl': Number(this.inspection_lvl.name),
+                'comments': '[]',
+            });
           this.$emit('update');
           this.$emit('toggleReadOnly');
         }
@@ -361,6 +375,7 @@ export default {
       } else console.log('Введена некорректная дата');
     },
     setDataParam(paramName, obj) {
+        this.fetchCatalogues();
       this.data[paramName] = obj;
     },
   },

@@ -56,7 +56,7 @@ return new class extends Migration
             $table->boolean('expired')->default(0);
             $table->boolean('busy_edit')->default(0);
             $table->json('comments');
-            $table->timestamp('updated_at')->useCurrentOnUpdate();
+            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate()->default(null);
             $table->timestamp('created_at')->useCurrent();
             $table->enum('inspection_lvl', ['1', '2', '3']);
         });

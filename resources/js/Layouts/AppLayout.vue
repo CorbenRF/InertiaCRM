@@ -100,7 +100,7 @@
       </ul>
       <!-- </div> -->
     </nav>
-    <!-- <tableModal v-if="modalVisible" :id="0" :readOnlyDefault="false" @close="closeModal" /> -->
+    <tableModal v-if="modalVisible" :id="0" :readOnlyDefault="false" @close="closeModal" />
     <article>
         <slot></slot>
     </article>
@@ -108,12 +108,12 @@
 
   <script>
   import { Link } from '@inertiajs/vue3';
-  // import tableModal from '@/components/UI/tableModal.vue';
+  import tableModal from '@/components/UI/tableModal.vue';
 
   export default {
-  //   components: { tableModal },
   components: {
       Link,
+      tableModal
     },
     data() {
       return {

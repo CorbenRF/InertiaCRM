@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\inspectors;
-use Illuminate\Http\Request;
+use App\Models\Inspector;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
 
 class InspectorsController extends Controller
 {
@@ -28,7 +31,12 @@ class InspectorsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $id = Inspector::create(
+            Request::validate([
+                'name' => ['required', 'max:50', 'unique:inspectors'],
+            ])
+        )->id;
+        return response()->json(array('success' => true, 'inserted_id' => $id), 200);
     }
 
     /**
