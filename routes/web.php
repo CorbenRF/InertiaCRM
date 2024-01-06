@@ -119,4 +119,46 @@ Route::delete('clients/{client}', [ClientsController::class, 'destroy'])
     ->middleware('auth');
 
 
+Route::get('curators', [CuratorsController::class, 'index'])
+->name('curators')
+->middleware('auth');
+Route::post('curators', [CuratorsController::class, 'store'])
+->name('curators.store')
+->middleware('auth');
+
+Route::get('departments', [DepartmentsController::class, 'index'])
+->name('departments')
+->middleware('auth');
+Route::post('departments', [DepartmentsController::class, 'store'])
+->name('departments.store')
+->middleware('auth');
+
+Route::get('inspectors', [InspectorsController::class, 'index'])
+->name('inspectors')
+->middleware('auth');
+Route::post('inspectors', [InspectorsController::class, 'store'])
+->name('inspectors.store')
+->middleware('auth');
+
+Route::get('statuses', [StatusesController::class, 'index'])
+->name('statuses')
+->middleware('auth');
+Route::post('statuses', [StatusesController::class, 'store'])
+->name('statuses.store')
+->middleware('auth');
+
+Route::get('vendors', [VendorsController::class, 'index'])
+    ->name('vendors')
+    ->middleware('auth');
+Route::post('vendors', [VendorsController::class, 'store'])
+->name('vendors.store')
+->middleware('auth');
+
+Route::get('subvendors', [SubvendorsController::class, 'index'])
+->name('subvendors')
+->middleware('auth');
+Route::post('subvendors', [SubvendorsController::class, 'store'])
+->name('subvendors.store')
+->middleware('auth');
+
 require __DIR__.'/auth.php';
