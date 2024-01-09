@@ -8,9 +8,10 @@
           <tr>
             <th scope="col" class="column col-1 col-title">
               <span>Дата заявки</span>
-              <button type="button" class="btn col-title" id="filter-id">
+              <button type="button" class="btn col-title" id="filter-id" @click="flipSortOrder">
                 <svg
                   class="arrow-up"
+                  :class="{ down: this.sortParams.date_received === 'desc' }"
                   width="8"
                   height="8"
                   viewBox="0 0 8 8"
@@ -160,10 +161,12 @@
 </template>
 
 <script>
+import { router } from '@inertiajs/vue3';
 import serverFunc from '@/mixins/serverFunc.vue';
 import tableModal from '@/components/UI/tableModal.vue';
 import Pagination from '@/Components/Pagination.vue';
 import dateFunc from '@/mixins/dateFunc.vue';
+import axios from 'axios';
 
 export default {
   components: { Pagination, tableModal },
@@ -176,6 +179,9 @@ export default {
       loadingFinished: true,
       modalVisible: false,
       componentKey: 0,
+      sortParams: {
+        date_received: 'asc',
+      },
       searchParams: {
         searchClientEntryNum: '',
         searchClientName: '',
@@ -194,6 +200,12 @@ export default {
     };
   },
   methods: {
+    flipSortOrder() {
+        this.sortParams.date_received === 'asc' ? this.sortParams.date_received = 'desc' : this.sortParams.date_received = 'asc';
+        // this.$page.props.filters.orderDateReceived = this.sortParams.date_received;
+        // router.reload({ only: ['users'] }, { order: this.sortParams.date_received });
+        router.reload({ data: { order: this.sortParams.date_received, orderDateReceived: this.sortParams.date_received },  });
+    },
     inputSearch() {
 
     },
@@ -230,5 +242,8 @@ export default {
   min-height: 60vh;
   display: flex;
   flex-direction: column;
+}
+.down {
+    transform: rotate(180deg);
 }
 </style>

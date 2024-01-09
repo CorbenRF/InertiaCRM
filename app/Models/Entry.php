@@ -32,4 +32,10 @@ public function departments(): HasOne
         return $this->hasOne(Department::class);
     }
 
+    // public function scopeOrderByDateReceived($query)
+    // {
+    //     $query->orderBy('date_received');
+    // }
+
+
 }

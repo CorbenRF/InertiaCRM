@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
 use App\Models\Entry;
 use App\Models\Department;
 use App\Models\Client;
@@ -24,7 +25,12 @@ class EntryController extends Controller
      */
     public function index()
     {
-        $entries = Entry::paginate(2)
+        $sortOrder = request()->query('orderDateReceived') ?: 'asc';
+        // $prev_order = $order;
+        // error_log('order value: ', $sortOrder);
+        // error_log('prev_order value: ', $prev_order);
+        $entries = Entry::orderBy('date_received', $sortOrder)
+        ->paginate(2)->withQueryString()
         ->through(function ($entry) {
             return [
                 'id' => $entry->id,
@@ -68,17 +74,20 @@ class EntryController extends Controller
                     'inspection_lvl' => $entry->inspection_lvl,
             ];
         });
+
+
         return Inertia::render('Entries/Index', [
-            'entries' => $entries, // entries from here pass as props down to Index.vue
-            'catalogues' => [
-                'departments' => Department::all(),
-                'clients' => Client::all(),
-                'curators' => Curator::all(),
-                'inspectors' => Inspector::all(),
-                'statuses' => Status::all(),
-                'vendors' => Vendor::all(),
-                'subvendors' => Subvendor::all(),
-            ]
+            'filters' => Request::all('search'),
+            'entries' => $entries,  // entries from here pass as props down to Index.vue
+            // 'catalogues' => [
+            //     'departments' => Department::all(),
+            //     'clients' => Client::all(),
+            //     'curators' => Curator::all(),
+            //     'inspectors' => Inspector::all(),
+            //     'statuses' => Status::all(),
+            //     'vendors' => Vendor::all(),
+            //     'subvendors' => Subvendor::all(),
+            // ]
         ]);
     }
 
@@ -112,6 +121,7 @@ class EntryController extends Controller
     public function store(Request $request)
     {
         Entry::create(
+            // Auth::user()->account->entries()->create(
             Request::validate([
                 'client_entry_num' => ['required', 'max:50'], // todo: unique entry_num as well as client_name
                 'client_name_id' => ['required'],
@@ -136,15 +146,7 @@ class EntryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Entry $entry)
-    {
-        return Inertia::render('Entries/Show', [
-            'entry' => $entry->only(
-                'id',
-                'client_entry_num',
-              ),
-        ]);
-    }
+
 
     /**
      * Show the form for editing the specified resource.

@@ -66,10 +66,6 @@ Route::get('entries', [EntryController::class, 'index'])
     ->name('entries')
     ->middleware('auth');
 
-// Route::get('entries/catalogues', [EntryController::class, 'catalogues'])
-//     ->name('entries.catalogues')
-//     ->middleware('auth');
-
 Route::get('entries/create', [EntryController::class, 'create'])
     ->name('entries.create')
     ->middleware('auth');

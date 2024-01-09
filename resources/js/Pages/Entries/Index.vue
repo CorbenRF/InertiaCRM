@@ -37,7 +37,7 @@ export default {
     },
     mounted() {
         console.log('entries:', this.entries);
-        console.log('catalogues:', this.$page.props.catalogues.departments);
+        // console.log('catalogues:', this.$page.props.catalogues.departments);
     },
 }
 
