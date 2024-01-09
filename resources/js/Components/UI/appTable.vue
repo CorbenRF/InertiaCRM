@@ -204,7 +204,7 @@ export default {
         this.sortParams.date_received === 'asc' ? this.sortParams.date_received = 'desc' : this.sortParams.date_received = 'asc';
         // this.$page.props.filters.orderDateReceived = this.sortParams.date_received;
         // router.reload({ only: ['users'] }, { order: this.sortParams.date_received });
-        router.reload({ data: { order: this.sortParams.date_received, orderDateReceived: this.sortParams.date_received },  });
+        router.reload({ only: ['entries'], data: { orderDateReceived: this.sortParams.date_received },  });
     },
     inputSearch() {
 
