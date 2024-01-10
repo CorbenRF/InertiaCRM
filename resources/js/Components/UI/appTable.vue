@@ -8,7 +8,7 @@
           <tr>
             <th scope="col" class="column col-1 col-title">
               <span>Дата заявки</span>
-              <button type="button" class="btn col-title" id="filter-id" @click="flipSortOrder">
+              <button type="button" class="btn col-title" id="orderDateReceived" @click="flipSortOrder('date_received')">
                 <svg
                   class="arrow-up"
                   :class="{ down: this.sortParams.date_received === 'desc' }"
@@ -37,7 +37,24 @@
             <th scope="col" class="column col-2 col-title">
               <span>ПП</span>
             </th>
-            <th scope="col" class="column col-1 col-title"><span>Дата начала</span></th>
+            <th scope="col" class="column col-1 col-title"><span>Дата начала</span>
+              <button type="button" class="btn col-title" id="orderDateStart" @click="flipSortOrder('date_startby')">
+                <svg
+                  class="arrow-up"
+                  :class="{ down: this.sortParams.date_startby === 'desc' }"
+                  width="8"
+                  height="8"
+                  viewBox="0 0 8 8"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3.49691e-07 4L0.705 4.705L3.5 1.915L3.5 8L4.5 8L4.5 1.915L7.29 4.71L8 4L4 -3.49691e-07L3.49691e-07 4Z"
+                    fill="#9873FF"
+                  />
+                </svg>
+              </button>
+            </th>
             <th scope="col" class="column col-2 col-title"><span>УИК</span></th>
           </tr>
           <!-- search fields -->
@@ -180,7 +197,8 @@ export default {
       modalVisible: false,
       componentKey: 0,
       sortParams: {
-        date_received: 'asc',
+        date_received: new URLSearchParams(window.location.search).has('date_received') ? new URLSearchParams(window.location.search).get('date_received') : 'asc',
+        date_startby: new URLSearchParams(window.location.search).has('date_startby') ? new URLSearchParams(window.location.search).get('date_startby') : 'asc',
       },
       searchParams: {
         searchClientEntryNum: '',
@@ -200,11 +218,9 @@ export default {
     };
   },
   methods: {
-    flipSortOrder() {
-        this.sortParams.date_received === 'asc' ? this.sortParams.date_received = 'desc' : this.sortParams.date_received = 'asc';
-        // this.$page.props.filters.orderDateReceived = this.sortParams.date_received;
-        // router.reload({ only: ['users'] }, { order: this.sortParams.date_received });
-        router.reload({ only: ['entries'], data: { orderDateReceived: this.sortParams.date_received },  });
+    flipSortOrder(sortBy) {
+        this.sortParams[sortBy] === 'asc' ? this.sortParams[sortBy] = 'desc' : this.sortParams[sortBy] = 'asc';
+        router.reload({ only: ['entries'], data: { [sortBy]: this.sortParams[sortBy] },  });
     },
     inputSearch() {
 
@@ -226,8 +242,8 @@ export default {
       this.forceRerender();
     },
   },
-  mounted() {
-    // this.$store.dispatch('fetchAPI', { path: '/entries' }).then((this.loadingFinished = true));
+  beforeCreated() {
+
   },
 };
 </script>

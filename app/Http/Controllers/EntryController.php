@@ -25,11 +25,11 @@ class EntryController extends Controller
      */
     public function index()
     {
-        $sortOrder = request()->query('orderDateReceived') ?: 'asc';
-        // $prev_order = $order;
-        // error_log('order value: ', $sortOrder);
-        // error_log('prev_order value: ', $prev_order);
-        $entries = Entry::orderBy('date_received', $sortOrder)
+        $sortDateReceived = request()->query('date_received') ?: 'asc';
+        $sortDateStartby = request()->query('date_startby') ?: 'asc';
+        $entries = Entry::orderByRaw("date_received {$sortDateReceived}, date_startby {$sortDateStartby}")
+        // orderBy('date_received', $sortDateReceived)
+        // ->orderBy('date_startby', $sortDateStartby)
         ->paginate(2)->withQueryString()
         ->through(function ($entry) {
             return [
