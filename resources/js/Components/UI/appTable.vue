@@ -82,7 +82,7 @@
                 class="form-control"
                 placeholder="Поиск..."
                 v-model="searchParams.searchClientEntryNum"
-                @input="inputSearch"
+                @input="inputSearch(target, 'searchClientEntryNum')"
               />
             </th>
             <th scope="col" class="column col-2 col-title">
@@ -91,6 +91,7 @@
                 class="form-control"
                 placeholder="Поиск..."
                 v-model="searchParams.searchClientName"
+                @input="inputSearch(target, 'searchClientName')"
               />
             </th>
             <th scope="col" class="column col-2 col-title">
@@ -99,6 +100,7 @@
                 class="form-control"
                 placeholder="Поиск..."
                 v-model="searchParams.searchVendorName"
+                @input="inputSearch(target, 'searchVendorName')"
               />
             </th>
             <th scope="col" class="column col-2 col-title">
@@ -107,6 +109,7 @@
                 class="form-control"
                 placeholder="Поиск..."
                 v-model="searchParams.searchSubvendorName"
+                @input="inputSearch(target, 'searchSubvendorName')"
               />
             </th>
             <th scope="col" class="column col-1 col-title">
@@ -115,6 +118,7 @@
                   type="date"
                   class="form-control"
                   v-model="searchParams.searchDateStart.from"
+
                 />
               </div>
               <div class="row">
@@ -127,7 +131,8 @@
                 type="text"
                 class="form-control"
                 placeholder="Поиск..."
-                v-model="searchParams.searchDepName"
+                v-model="searchParams.searchDepartmentName"
+                @input="inputSearch(target, 'searchDepartmentName')"
               />
             </th>
           </tr>
@@ -137,17 +142,17 @@
             <td>{{ makeStringDate(row.date_received) }}</td>
             <td>{{ row.client_entry_num }}</td>
             <td>
-              {{ row.clientName }}
+              {{ row.client.name }}
             </td>
             <td>
-              {{ row.vendorName }}
+              {{ row.vendor.name }}
             </td>
             <td>
-              {{ row.subvendorName }}
+              {{ row.subvendor.name }}
             </td>
             <td>{{ makeStringDate(row.date_startby) }}</td>
             <td>
-              {{ row.depName }}
+              {{ row.department.name }}
             </td>
           </tr>
         </tbody>
@@ -201,11 +206,11 @@ export default {
         date_startby: new URLSearchParams(window.location.search).has('date_startby') ? new URLSearchParams(window.location.search).get('date_startby') : 'asc',
       },
       searchParams: {
-        searchClientEntryNum: '',
-        searchClientName: '',
-        searchVendorName: '',
-        searchSubvendorName: '',
-        searchDepName: '',
+        searchClientEntryNum: new URLSearchParams(window.location.search).has('searchClientEntryNum') ? new URLSearchParams(window.location.search).get('searchClientEntryNum') : '',
+        searchClientName: new URLSearchParams(window.location.search).has('searchClientName') ? new URLSearchParams(window.location.search).get('searchClientName') : '',
+        searchVendorName: new URLSearchParams(window.location.search).has('searchClientVendorName') ? new URLSearchParams(window.location.search).get('searchClientVendorName') : '',
+        searchSubvendorName: new URLSearchParams(window.location.search).has('searchClientSubvendorName') ? new URLSearchParams(window.location.search).get('searchClientSubvendorName') : '',
+        searchDepartmentName: new URLSearchParams(window.location.search).has('searchClientDepartmentName') ? new URLSearchParams(window.location.search).get('searchClientEntryNum') : '',
         searchDateRecieved: {
           from: '',
           to: '',
@@ -222,8 +227,9 @@ export default {
         this.sortParams[sortBy] === 'asc' ? this.sortParams[sortBy] = 'desc' : this.sortParams[sortBy] = 'asc';
         router.reload({ only: ['entries'], data: { [sortBy]: this.sortParams[sortBy] },  });
     },
-    inputSearch() {
-
+    inputSearch(target, fieldName) {
+        console.log('input event registered: ', target);
+        router.reload({ only: ['entries'], data: { [fieldName]: this.searchParams[fieldName] },  });
     },
     forceRerender() {
       this.componentKey += 1;

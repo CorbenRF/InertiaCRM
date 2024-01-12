@@ -2,6 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Account;
+use App\Models\Entry;
+use App\Models\Department;
+use App\Models\Client;
+use App\Models\Curator;
+use App\Models\Inspector;
+use App\Models\Status;
+use App\Models\Subvendor;
+use App\Models\Vendor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -29,13 +38,45 @@ protected static function boot()
 
 public function departments(): HasOne
     {
-        return $this->hasOne(Department::class);
+        return $this->hasOne(Department::class, 'id', 'department_id');
     }
 
-    // public function scopeOrderByDateReceived($query)
-    // {
-    //     $query->orderBy('date_received');
-    // }
+    public function clients(): HasOne
+    {
+        return $this->hasOne(Client::class, 'id', 'client_name_id');
+    }
 
+    public function curators(): HasOne
+    {
+        return $this->hasOne(Curator::class, 'id', 'curator_id');
+    }
+
+    public function inspectors(): HasOne
+    {
+        return $this->hasOne(Inspector::class, 'id', 'inspector_id');
+    }
+
+    public function statuses(): HasOne
+    {
+        return $this->hasOne(Status::class, 'id', 'status_id');
+    }
+
+    public function vendors(): HasOne
+    {
+        return $this->hasOne(Vendor::class, 'id', 'vendor_name_id');
+    }
+
+    public function subvendors(): HasOne
+    {
+        return $this->hasOne(Subvendor::class, 'id', 'subvendor_name_id');
+    }
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['searchClientEntryNum'] ?? null, function ($query, $search) {
+            error_log($search);
+            $query->where('client_entry_num', 'like', '%'.$search.'%');
+        });
+    }
 
 }

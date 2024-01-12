@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Entry;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Inspector extends Model
@@ -15,6 +16,6 @@ class Inspector extends Model
 
     public function entries()
     {
-        return $this->belongsToMany(Entry::class);
+        return $this->belongsToMany(Entry::class, 'inspector_id', 'id');
     }
 }

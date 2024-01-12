@@ -27,9 +27,41 @@ class EntryController extends Controller
     {
         $sortDateReceived = request()->query('date_received') ?: 'asc';
         $sortDateStartby = request()->query('date_startby') ?: 'asc';
-        $entries = Entry::orderByRaw("date_received {$sortDateReceived}, date_startby {$sortDateStartby}")
-        // orderBy('date_received', $sortDateReceived)
-        // ->orderBy('date_startby', $sortDateStartby)
+        $searchArr = (object) [
+            'searchClientEntryNum'  => request()->query('searchClientEntryNum') ?: null,
+            'searchClientName' => request()->query('searchClientName') ?: null,
+            'searchVendorName' => request()->query('searchVendorName') ?: null,
+            'searchSubvendorName' => request()->query('searchSubvendorName') ?: null,
+            'searchDepartmentName' => request()->query('searchDepartmentName') ?: null,
+    ];
+        // $clientFindId = isset($searchArr->searchClientName) ? Client::find($searchArr->searchClientName)->id : null;
+        $query = Entry::query();
+
+        if (isset($searchArr->searchClientEntryNum))
+            $query->where('client_entry_num', 'like', '%' . $searchArr->searchClientEntryNum . '%');
+
+        if (isset($searchArr->searchClientName))
+            $query->whereHas('clients', function($qty) use ($searchArr){ // works!  need to do same with updating every model
+                $qty->where('name', 'like', '%' . $searchArr->searchClientName . '%');
+           });
+            // $query->has('clients')->where('name', 'LIKE', '%' . $searchArr->searchClientName . '%');
+
+        $entries = $query->
+        // Entry::
+        // where('client_entry_num', 'like', '%' . $searchArr->searchClientEntryNum . '%')
+        // ->where('client_name_id', '=', $clientFindId)
+        // ->where('VendorName', 'like', '%' . $searchArr->searchVendorName . '%')
+        // ->where('SubvendorName', 'like', '%' . $searchArr->searchSubvendorName . '%')
+        // ->where('DepartmentName', 'like', '%' . $searchArr->searchDepartmentName . '%')
+        // query()
+        // ->when($searchArr ?? null, function ($query, $search) {
+        //     if(request()->has('searchClientEntryNum')) {
+        //         $query->where('client_entry_num', 'like', request()->query('searchClientEntryNum'));
+        //     }
+
+        //         // ->OrWhere('email', 'like', '%' . $search . '%');
+        // })
+        orderByRaw("date_received {$sortDateReceived}, date_startby {$sortDateStartby}")
         ->paginate(2)->withQueryString()
         ->through(function ($entry) {
             return [
@@ -79,15 +111,6 @@ class EntryController extends Controller
         return Inertia::render('Entries/Index', [
             'filters' => Request::all('search'),
             'entries' => $entries,  // entries from here pass as props down to Index.vue
-            // 'catalogues' => [
-            //     'departments' => Department::all(),
-            //     'clients' => Client::all(),
-            //     'curators' => Curator::all(),
-            //     'inspectors' => Inspector::all(),
-            //     'statuses' => Status::all(),
-            //     'vendors' => Vendor::all(),
-            //     'subvendors' => Subvendor::all(),
-            // ]
         ]);
     }
 
