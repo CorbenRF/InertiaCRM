@@ -25,6 +25,8 @@ class EntryController extends Controller
      */
     public function index()
     {
+        // ORDER AND SEARCH QUERY BUILDER
+
         $sortDateReceived = request()->query('date_received') ?: 'asc';
         $sortDateStartby = request()->query('date_startby') ?: 'asc';
         $searchArr = (object) [
@@ -34,33 +36,35 @@ class EntryController extends Controller
             'searchSubvendorName' => request()->query('searchSubvendorName') ?: null,
             'searchDepartmentName' => request()->query('searchDepartmentName') ?: null,
     ];
-        // $clientFindId = isset($searchArr->searchClientName) ? Client::find($searchArr->searchClientName)->id : null;
+
         $query = Entry::query();
 
         if (isset($searchArr->searchClientEntryNum))
             $query->where('client_entry_num', 'like', '%' . $searchArr->searchClientEntryNum . '%');
 
         if (isset($searchArr->searchClientName))
-            $query->whereHas('clients', function($qty) use ($searchArr){ // works!  need to do same with updating every model
+            $query->whereHas('clients', function($qty) use ($searchArr){
                 $qty->where('name', 'like', '%' . $searchArr->searchClientName . '%');
            });
-            // $query->has('clients')->where('name', 'LIKE', '%' . $searchArr->searchClientName . '%');
+
+        if (isset($searchArr->searchVendorName))
+            $query->whereHas('vendors', function($qty) use ($searchArr){
+                $qty->where('name', 'like', '%' . $searchArr->searchVendorName . '%');
+        });
+
+        if (isset($searchArr->searchSubvendorName))
+            $query->whereHas('subvendors', function($qty) use ($searchArr){
+                $qty->where('name', 'like', '%' . $searchArr->searchSubvendorName . '%');
+           });
+
+        if (isset($searchArr->searchDepartmentName))
+        $query->whereHas('departments', function($qty) use ($searchArr){
+            $qty->where('name', 'like', '%' . $searchArr->searchDepartmentName . '%');
+        });
+
+        // END - ORDER AND SEARCH QUERY BUILDER
 
         $entries = $query->
-        // Entry::
-        // where('client_entry_num', 'like', '%' . $searchArr->searchClientEntryNum . '%')
-        // ->where('client_name_id', '=', $clientFindId)
-        // ->where('VendorName', 'like', '%' . $searchArr->searchVendorName . '%')
-        // ->where('SubvendorName', 'like', '%' . $searchArr->searchSubvendorName . '%')
-        // ->where('DepartmentName', 'like', '%' . $searchArr->searchDepartmentName . '%')
-        // query()
-        // ->when($searchArr ?? null, function ($query, $search) {
-        //     if(request()->has('searchClientEntryNum')) {
-        //         $query->where('client_entry_num', 'like', request()->query('searchClientEntryNum'));
-        //     }
-
-        //         // ->OrWhere('email', 'like', '%' . $search . '%');
-        // })
         orderByRaw("date_received {$sortDateReceived}, date_startby {$sortDateStartby}")
         ->paginate(2)->withQueryString()
         ->through(function ($entry) {

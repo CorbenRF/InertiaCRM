@@ -57,24 +57,26 @@
             </th>
             <th scope="col" class="column col-2 col-title"><span>УИК</span></th>
           </tr>
+
           <!-- search fields -->
           <tr>
             <th scope="col" class="column col-1 col-title">
               <div class="row mb-3">
-                <input
+                <DatepickerComp v-model="this.searchParams.searchDateRecieved" />
+                <!-- <input
                   type="date"
                   class="form-control"
                   v-model="searchParams.searchDateRecieved.from"
-                />
+                /> -->
               </div>
-              <div class="row">
-                <!-- get earliest date from server as metadata -->
+              <!-- <div class="row">
+
                 <input
                   type="date"
                   class="form-control"
                   v-model="searchParams.searchDateRecieved.to"
                 />
-              </div>
+              </div> -->
             </th>
             <th scope="col" class="column col-2 col-title">
               <input
@@ -188,10 +190,12 @@ import serverFunc from '@/mixins/serverFunc.vue';
 import tableModal from '@/components/UI/tableModal.vue';
 import Pagination from '@/Components/Pagination.vue';
 import dateFunc from '@/mixins/dateFunc.vue';
+import datepickerComp from './datepickerComp.vue';
 import axios from 'axios';
+import DatepickerComp from './datepickerComp.vue';
 
 export default {
-  components: { Pagination, tableModal },
+  components: { Pagination, tableModal, datepickerComp, DatepickerComp },
   props: ['serverData', 'links'],
   mixins: [dateFunc, serverFunc],
   data() {
@@ -211,10 +215,7 @@ export default {
         searchVendorName: new URLSearchParams(window.location.search).has('searchClientVendorName') ? new URLSearchParams(window.location.search).get('searchClientVendorName') : '',
         searchSubvendorName: new URLSearchParams(window.location.search).has('searchClientSubvendorName') ? new URLSearchParams(window.location.search).get('searchClientSubvendorName') : '',
         searchDepartmentName: new URLSearchParams(window.location.search).has('searchClientDepartmentName') ? new URLSearchParams(window.location.search).get('searchClientEntryNum') : '',
-        searchDateRecieved: {
-          from: '',
-          to: '',
-        },
+        searchDateRecieved: new URLSearchParams(window.location.search).has('searchDR') ? new URLSearchParams(window.location.search).get('searchDR') : ['', ''],
         searchDateStart: {
           from: '',
           to: '',
