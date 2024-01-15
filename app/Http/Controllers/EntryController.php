@@ -35,6 +35,10 @@ class EntryController extends Controller
             'searchVendorName' => request()->query('searchVendorName') ?: null,
             'searchSubvendorName' => request()->query('searchSubvendorName') ?: null,
             'searchDepartmentName' => request()->query('searchDepartmentName') ?: null,
+            'searchDRFrom' => request()->query('searchDRFrom') ?: null,
+            'searchDRTo' => request()->query('searchDRTo') ?: null,
+            'searchDSFrom' => request()->query('searchDSFrom') ?: null,
+            'searchDSTo' => request()->query('searchDSTo') ?: null,
     ];
 
         $query = Entry::query();
@@ -61,6 +65,12 @@ class EntryController extends Controller
         $query->whereHas('departments', function($qty) use ($searchArr){
             $qty->where('name', 'like', '%' . $searchArr->searchDepartmentName . '%');
         });
+
+        if (isset($searchArr->searchDRFrom) && isset($searchArr->searchDRTo))
+        $query->whereBetween('date_received', [$searchArr->searchDRFrom, $searchArr->searchDRTo]);
+
+        if (isset($searchArr->searchDSFrom) && isset($searchArr->searchDSTo))
+        $query->whereBetween('date_startby', [$searchArr->searchDSFrom, $searchArr->searchDSTo]);
 
         // END - ORDER AND SEARCH QUERY BUILDER
 

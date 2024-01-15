@@ -61,22 +61,9 @@
           <!-- search fields -->
           <tr>
             <th scope="col" class="column col-1 col-title">
-              <div class="row mb-3">
-                <DatepickerComp v-model="this.searchParams.searchDateRecieved" />
-                <!-- <input
-                  type="date"
-                  class="form-control"
-                  v-model="searchParams.searchDateRecieved.from"
-                /> -->
+              <div class="row">
+                <DatepickerComp v-model="this.searchParams.searchDateRecieved" dateType="searchDR" />
               </div>
-              <!-- <div class="row">
-
-                <input
-                  type="date"
-                  class="form-control"
-                  v-model="searchParams.searchDateRecieved.to"
-                />
-              </div> -->
             </th>
             <th scope="col" class="column col-2 col-title">
               <input
@@ -115,17 +102,8 @@
               />
             </th>
             <th scope="col" class="column col-1 col-title">
-              <div class="row mb-3">
-                <input
-                  type="date"
-                  class="form-control"
-                  v-model="searchParams.searchDateStart.from"
-
-                />
-              </div>
               <div class="row">
-                <!-- get earliest date from server as metadata -->
-                <input type="date" class="form-control" v-model="searchParams.searchDateStart.to" />
+                <DatepickerComp v-model="this.searchParams.searchDateStart" dateType="searchDS" />
               </div>
             </th>
             <th scope="col" class="column col-2 col-title">
@@ -190,12 +168,10 @@ import serverFunc from '@/mixins/serverFunc.vue';
 import tableModal from '@/components/UI/tableModal.vue';
 import Pagination from '@/Components/Pagination.vue';
 import dateFunc from '@/mixins/dateFunc.vue';
-import datepickerComp from './datepickerComp.vue';
-import axios from 'axios';
 import DatepickerComp from './datepickerComp.vue';
 
 export default {
-  components: { Pagination, tableModal, datepickerComp, DatepickerComp },
+  components: { Pagination, tableModal, DatepickerComp },
   props: ['serverData', 'links'],
   mixins: [dateFunc, serverFunc],
   data() {
@@ -215,11 +191,9 @@ export default {
         searchVendorName: new URLSearchParams(window.location.search).has('searchClientVendorName') ? new URLSearchParams(window.location.search).get('searchClientVendorName') : '',
         searchSubvendorName: new URLSearchParams(window.location.search).has('searchClientSubvendorName') ? new URLSearchParams(window.location.search).get('searchClientSubvendorName') : '',
         searchDepartmentName: new URLSearchParams(window.location.search).has('searchClientDepartmentName') ? new URLSearchParams(window.location.search).get('searchClientEntryNum') : '',
-        searchDateRecieved: new URLSearchParams(window.location.search).has('searchDR') ? new URLSearchParams(window.location.search).get('searchDR') : ['', ''],
-        searchDateStart: {
-          from: '',
-          to: '',
-        },
+        searchDateRecieved: new URLSearchParams(window.location.search).has('searchDRFrom') ? [new URLSearchParams(window.location.search).get('searchDRFrom'), new URLSearchParams(window.location.search).get('searchDRTo')] : ['', ''],
+        searchDateStart: new URLSearchParams(window.location.search).has('searchDSFrom') ? [new URLSearchParams(window.location.search).get('searchDSFrom'), new URLSearchParams(window.location.search).get('searchDSTo')] : ['', ''],
+
       },
     };
   },
