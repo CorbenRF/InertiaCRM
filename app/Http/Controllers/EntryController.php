@@ -25,57 +25,98 @@ class EntryController extends Controller
      */
     public function index()
     {
-        // ORDER AND SEARCH QUERY BUILDER
 
-        $sortDateReceived = request()->query('date_received') ?: 'asc';
-        $sortDateStartby = request()->query('date_startby') ?: 'asc';
+        // ORDER AND SEARCH QUERY BUILDER
         $searchArr = (object) [
-            'searchClientEntryNum'  => request()->query('searchClientEntryNum') ?: null,
-            'searchClientName' => request()->query('searchClientName') ?: null,
-            'searchVendorName' => request()->query('searchVendorName') ?: null,
-            'searchSubvendorName' => request()->query('searchSubvendorName') ?: null,
-            'searchDepartmentName' => request()->query('searchDepartmentName') ?: null,
             'searchDRFrom' => request()->query('searchDRFrom') ?: null,
             'searchDRTo' => request()->query('searchDRTo') ?: null,
             'searchDSFrom' => request()->query('searchDSFrom') ?: null,
             'searchDSTo' => request()->query('searchDSTo') ?: null,
     ];
 
-        $query = Entry::query();
+    $query = Entry::query();
 
-        if (isset($searchArr->searchClientEntryNum))
-            $query->where('client_entry_num', 'like', '%' . $searchArr->searchClientEntryNum . '%');
+        foreach (request()->except('_token') as $key => $value) {
+            $queryValue = isset($value) ? $value : null;
+        if ($key == 'searchClientEntryNum')
+            {$query->where('client_entry_num', 'like', '%' . $queryValue . '%');}
 
-        if (isset($searchArr->searchClientName))
-            $query->whereHas('clients', function($qty) use ($searchArr){
-                $qty->where('name', 'like', '%' . $searchArr->searchClientName . '%');
-           });
+        elseif ($key == 'searchClientName')
+            {$query->whereHas('clients', function($qty) use ($queryValue){
+                $qty->where('name', 'like', '%' . $queryValue . '%');
+           });}
 
-        if (isset($searchArr->searchVendorName))
-            $query->whereHas('vendors', function($qty) use ($searchArr){
-                $qty->where('name', 'like', '%' . $searchArr->searchVendorName . '%');
-        });
+        elseif ($key == 'searchVendorName')
+            {$query->whereHas('vendors', function($qty) use ($queryValue){
+                $qty->where('name', 'like', '%' . $queryValue . '%');
+        });}
 
-        if (isset($searchArr->searchSubvendorName))
-            $query->whereHas('subvendors', function($qty) use ($searchArr){
-                $qty->where('name', 'like', '%' . $searchArr->searchSubvendorName . '%');
-           });
+        elseif ($key == 'searchSubvendorName')
+            {$query->whereHas('subvendors', function($qty) use ($queryValue){
+                $qty->where('name', 'like', '%' . $queryValue . '%');
+           });}
 
-        if (isset($searchArr->searchDepartmentName))
-        $query->whereHas('departments', function($qty) use ($searchArr){
-            $qty->where('name', 'like', '%' . $searchArr->searchDepartmentName . '%');
-        });
+        elseif ($key == 'searchDepartmentName')
+            {$query->whereHas('departments', function($qty) use ($queryValue){
+                $qty->where('name', 'like', '%' . $queryValue . '%');
+            });}
 
-        if (isset($searchArr->searchDRFrom) && isset($searchArr->searchDRTo))
-        $query->whereBetween('date_received', [$searchArr->searchDRFrom, $searchArr->searchDRTo]);
+        elseif ($key == 'searchDRFrom' && isset($searchArr->searchDRFrom) && isset($searchArr->searchDRTo))
+            {$query->whereBetween('date_received', [$searchArr->searchDRFrom, $searchArr->searchDRTo]);}
 
-        if (isset($searchArr->searchDSFrom) && isset($searchArr->searchDSTo))
-        $query->whereBetween('date_startby', [$searchArr->searchDSFrom, $searchArr->searchDSTo]);
+        elseif ($key == 'searchDSFrom' && isset($searchArr->searchDSFrom) && isset($searchArr->searchDSTo))
+            {$query->whereBetween('date_startby', [$searchArr->searchDSFrom, $searchArr->searchDSTo]);}
 
+        elseif ($key == 'date_received')
+            {$query->orderBy('date_received', $queryValue);}
+
+        elseif ($key == 'date_startby')
+            {$query->orderBy('date_startby', $queryValue);}
+
+          }
+
+        // $sortDateReceived = request()->query('date_received') ?: null;
+        // $sortDateStartby = request()->query('date_startby') ?: null;
+
+        // $query = Entry::query();
+
+        // if (isset($searchArr->searchClientEntryNum))
+        //     $query->where('client_entry_num', 'like', '%' . $searchArr->searchClientEntryNum . '%');
+
+        // if (isset($searchArr->searchClientName))
+        //     $query->whereHas('clients', function($qty) use ($searchArr){
+        //         $qty->where('name', 'like', '%' . $searchArr->searchClientName . '%');
+        //    });
+
+        // if (isset($searchArr->searchVendorName))
+        //     $query->whereHas('vendors', function($qty) use ($searchArr){
+        //         $qty->where('name', 'like', '%' . $searchArr->searchVendorName . '%');
+        // });
+
+        // if (isset($searchArr->searchSubvendorName))
+        //     $query->whereHas('subvendors', function($qty) use ($searchArr){
+        //         $qty->where('name', 'like', '%' . $searchArr->searchSubvendorName . '%');
+        //    });
+
+        // if (isset($searchArr->searchDepartmentName))
+        // $query->whereHas('departments', function($qty) use ($searchArr){
+        //     $qty->where('name', 'like', '%' . $searchArr->searchDepartmentName . '%');
+        // });
+
+        // if (isset($searchArr->searchDRFrom) && isset($searchArr->searchDRTo))
+        // $query->whereBetween('date_received', [$searchArr->searchDRFrom, $searchArr->searchDRTo]);
+
+        // if (isset($searchArr->searchDSFrom) && isset($searchArr->searchDSTo))
+        // $query->whereBetween('date_startby', [$searchArr->searchDSFrom, $searchArr->searchDSTo]);
+
+        // if (isset($sortDateReceived))
+        //     $query->orderBy('date_received', $sortDateReceived);
+
+        // if (isset($sortDateStartby))
+        // $query->orderBy('date_startby', $sortDateStartby);
         // END - ORDER AND SEARCH QUERY BUILDER
 
-        $entries = $query->
-        orderByRaw("date_received {$sortDateReceived}, date_startby {$sortDateStartby}")
+        $entries = $query
         ->paginate(2)->withQueryString()
         ->through(function ($entry) {
             return [

@@ -49,11 +49,11 @@ export default {
                 console.log('modeldata is: ', modelData[0]);
             this.pickerDate = modelData;
             this.$emit('update:modelValue', modelData);
-            router.reload({ only: ['entries'], data: { [`${this.dateType}From`]: this.pickerDate[0], [`${this.dateType}To`]: this.pickerDate[1] },  });
+            router.reload({ only: ['entries'], data: { [`${this.dateType}From`]: this.pickerDate[0], [`${this.dateType}To`]: this.pickerDate[1], 'page': '', }, });
             } else {
                 this.pickerDate = ['', ''];
                 this.$emit('update:modelValue', ['', '']);
-                router.reload({ only: ['entries'], data: { [`${this.dateType}From`]: null, [`${this.dateType}To`]: null },  });
+                router.reload({ only: ['entries'], data: { [`${this.dateType}From`]: null, [`${this.dateType}To`]: null, 'page': '', }, });
             }
            },
         // clear() {

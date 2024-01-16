@@ -182,15 +182,15 @@ export default {
       modalVisible: false,
       componentKey: 0,
       sortParams: {
-        date_received: new URLSearchParams(window.location.search).has('date_received') ? new URLSearchParams(window.location.search).get('date_received') : 'asc',
-        date_startby: new URLSearchParams(window.location.search).has('date_startby') ? new URLSearchParams(window.location.search).get('date_startby') : 'asc',
+        date_received: new URLSearchParams(window.location.search).has('date_received') ? new URLSearchParams(window.location.search).get('date_received') : '',
+        date_startby: new URLSearchParams(window.location.search).has('date_startby') ? new URLSearchParams(window.location.search).get('date_startby') : '',
       },
       searchParams: {
         searchClientEntryNum: new URLSearchParams(window.location.search).has('searchClientEntryNum') ? new URLSearchParams(window.location.search).get('searchClientEntryNum') : '',
         searchClientName: new URLSearchParams(window.location.search).has('searchClientName') ? new URLSearchParams(window.location.search).get('searchClientName') : '',
-        searchVendorName: new URLSearchParams(window.location.search).has('searchClientVendorName') ? new URLSearchParams(window.location.search).get('searchClientVendorName') : '',
-        searchSubvendorName: new URLSearchParams(window.location.search).has('searchClientSubvendorName') ? new URLSearchParams(window.location.search).get('searchClientSubvendorName') : '',
-        searchDepartmentName: new URLSearchParams(window.location.search).has('searchClientDepartmentName') ? new URLSearchParams(window.location.search).get('searchClientEntryNum') : '',
+        searchVendorName: new URLSearchParams(window.location.search).has('searchVendorName') ? new URLSearchParams(window.location.search).get('searchVendorName') : '',
+        searchSubvendorName: new URLSearchParams(window.location.search).has('searchSubvendorName') ? new URLSearchParams(window.location.search).get('searchSubvendorName') : '',
+        searchDepartmentName: new URLSearchParams(window.location.search).has('searchDepartmentName') ? new URLSearchParams(window.location.search).get('searchDepartmentName') : '',
         searchDateRecieved: new URLSearchParams(window.location.search).has('searchDRFrom') ? [new URLSearchParams(window.location.search).get('searchDRFrom'), new URLSearchParams(window.location.search).get('searchDRTo')] : ['', ''],
         searchDateStart: new URLSearchParams(window.location.search).has('searchDSFrom') ? [new URLSearchParams(window.location.search).get('searchDSFrom'), new URLSearchParams(window.location.search).get('searchDSTo')] : ['', ''],
 
@@ -199,12 +199,12 @@ export default {
   },
   methods: {
     flipSortOrder(sortBy) {
-        this.sortParams[sortBy] === 'asc' ? this.sortParams[sortBy] = 'desc' : this.sortParams[sortBy] = 'asc';
-        router.reload({ only: ['entries'], data: { [sortBy]: this.sortParams[sortBy] },  });
+        this.sortParams[sortBy] === '' ? this.sortParams[sortBy] = 'desc' : this.sortParams[sortBy] = 'asc';
+        router.reload({ only: ['entries'], data: { [sortBy]: this.sortParams[sortBy] }, 'page': '', });
     },
     inputSearch(target, fieldName) {
         console.log('input event registered: ', target);
-        router.reload({ only: ['entries'], data: { [fieldName]: this.searchParams[fieldName] },  });
+        router.reload({ only: ['entries'], data: { [fieldName]: this.searchParams[fieldName], 'page': '', },  });
     },
     forceRerender() {
       this.componentKey += 1;
