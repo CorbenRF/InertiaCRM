@@ -22,6 +22,22 @@ class CataloguesController extends Controller
      */
     public function index()
     {
+        $currentCatalogue = 'departments';
+        $catalogue = Department::all();
+
+        return Inertia::render('Catalogues/Index', [
+            'catalogue' => $catalogue,
+            'cataloguesList' => [
+                ['id' => 'departments', 'name' => 'УИК'],
+                ['id' => 'clients', 'name' => 'Заказчики'],
+                ['id' => 'vendors', 'name' => 'Поставщики'],
+                ['id' => 'subvendors', 'name' => 'Изготовители/Субпоставщики'],
+                ['id' => 'inspectors', 'name' => 'Инспекторы'],
+                ['id' => 'curators', 'name' => 'Кураторы'],
+                ['id' => 'statuses', 'name' => 'Статусы'],
+
+            ],
+        ]);
     }
 
     public function get(Request $request)

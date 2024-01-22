@@ -3,6 +3,15 @@
   <div class="container table-wrapper">
     <h1 class="title">Заявки</h1>
     <div class="table-responsive-md">
+    <div class="table__resetbtn" v-show="isQueryEmpty">
+      <button type="button" class="btn btn-outline-info" @click="resetFilterSort">
+        Сбросить фильтры/сортировки
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter-square" viewBox="0 0 16 16">
+  <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+  <path d="M6 11.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
+</svg>
+      </button>
+    </div>
       <table class="table table-hover" v-if="loadingFinished">
         <thead class="table-head">
           <tr>
@@ -197,6 +206,26 @@ export default {
       },
     };
   },
+  computed: {
+    isQueryEmpty() {
+      for(let key in this.searchParams) {
+        if(this.searchParams[key] !== '') {
+          if(Array.isArray(this.searchParams[key])) {
+            if(this.searchParams[key][1] != '' && this.searchParams[key][0] != '' ) return true;
+          }
+          else {
+          return true;
+          }
+        }
+      };
+      for(let key in this.sortParams) {
+        if(this.sortParams[key] !== '') {
+          return true;
+        }
+      };
+      return false;
+    },
+  },
   methods: {
     flipSortOrder(sortBy) {
         this.sortParams[sortBy] === '' ? this.sortParams[sortBy] = 'desc' : this.sortParams[sortBy] = 'asc';
@@ -205,6 +234,9 @@ export default {
     inputSearch(target, fieldName) {
         console.log('input event registered: ', target);
         router.reload({ only: ['entries'], data: { [fieldName]: this.searchParams[fieldName], 'page': '', },  });
+    },
+    resetFilterSort() {
+      router.visit('/entries');
     },
     forceRerender() {
       this.componentKey += 1;
@@ -223,8 +255,8 @@ export default {
       this.forceRerender();
     },
   },
-  beforeCreated() {
-
+  mounted() {
+    // console.log('is searchParams empty? ', Object.keys(this.searchParams));
   },
 };
 </script>
@@ -233,6 +265,10 @@ export default {
 .table {
   &__entry {
     cursor: pointer;
+  }
+  &__resetbtn {
+    display: block;
+    text-align: center;
   }
 }
 .table-wrapper {

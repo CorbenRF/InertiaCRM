@@ -75,45 +75,6 @@ class EntryController extends Controller
 
           }
 
-        // $sortDateReceived = request()->query('date_received') ?: null;
-        // $sortDateStartby = request()->query('date_startby') ?: null;
-
-        // $query = Entry::query();
-
-        // if (isset($searchArr->searchClientEntryNum))
-        //     $query->where('client_entry_num', 'like', '%' . $searchArr->searchClientEntryNum . '%');
-
-        // if (isset($searchArr->searchClientName))
-        //     $query->whereHas('clients', function($qty) use ($searchArr){
-        //         $qty->where('name', 'like', '%' . $searchArr->searchClientName . '%');
-        //    });
-
-        // if (isset($searchArr->searchVendorName))
-        //     $query->whereHas('vendors', function($qty) use ($searchArr){
-        //         $qty->where('name', 'like', '%' . $searchArr->searchVendorName . '%');
-        // });
-
-        // if (isset($searchArr->searchSubvendorName))
-        //     $query->whereHas('subvendors', function($qty) use ($searchArr){
-        //         $qty->where('name', 'like', '%' . $searchArr->searchSubvendorName . '%');
-        //    });
-
-        // if (isset($searchArr->searchDepartmentName))
-        // $query->whereHas('departments', function($qty) use ($searchArr){
-        //     $qty->where('name', 'like', '%' . $searchArr->searchDepartmentName . '%');
-        // });
-
-        // if (isset($searchArr->searchDRFrom) && isset($searchArr->searchDRTo))
-        // $query->whereBetween('date_received', [$searchArr->searchDRFrom, $searchArr->searchDRTo]);
-
-        // if (isset($searchArr->searchDSFrom) && isset($searchArr->searchDSTo))
-        // $query->whereBetween('date_startby', [$searchArr->searchDSFrom, $searchArr->searchDSTo]);
-
-        // if (isset($sortDateReceived))
-        //     $query->orderBy('date_received', $sortDateReceived);
-
-        // if (isset($sortDateStartby))
-        // $query->orderBy('date_startby', $sortDateStartby);
         // END - ORDER AND SEARCH QUERY BUILDER
 
         $entries = $query

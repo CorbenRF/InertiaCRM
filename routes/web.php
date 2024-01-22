@@ -43,9 +43,9 @@ Route::get('/dashboard', function () {
 //     return Inertia::render('History');
 // })->middleware(['auth', 'verified'])->name('history');
 
-Route::get('/catalogues', function () {
-    return Inertia::render('Catalogues');
-})->middleware(['auth', 'verified'])->name('catalogues');
+// Route::get('/catalogues', function () {
+//     return Inertia::render('Catalogues/Index');
+// })->middleware('auth')->name('catalogues');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -53,13 +53,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+Route::get('catalogues', [CataloguesController::class, 'index'])
+    ->name('catalogues')
+    ->middleware('auth');
+
 Route::get('history', [HistoryController::class, 'index'])
     ->name('history')
     ->middleware('auth');
 
-    Route::get('catalogues/get', [CataloguesController::class, 'get'])
-    ->name('catalogues.get')
-    ->middleware('auth');
 // Entries
 
 Route::get('entries', [EntryController::class, 'index'])
