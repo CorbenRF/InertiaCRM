@@ -22,19 +22,31 @@ class CataloguesController extends Controller
      */
     public function index()
     {
-        $currentCatalogue = 'departments';
-        $catalogue = Department::all();
+        $currentCatalogue = request()->query('catalogue');
+        $output_string = 'App\Models\$value';
+        $values = array( '$value' => request()->query('catalogue'));
+
+        $catalogue = $currentCatalogue ?
+        strtr($output_string, $values)::query()
+        ->paginate(5)->withQueryString()
+        ->through(function ($entry) {
+            return [
+                'id' => $entry->id,
+                'name' => $entry->name,
+            ];})
+        : null;
+        // $catalogue = $currentCatalogue::all();
 
         return Inertia::render('Catalogues/Index', [
             'catalogue' => $catalogue,
             'cataloguesList' => [
-                ['id' => 'departments', 'name' => 'УИК'],
-                ['id' => 'clients', 'name' => 'Заказчики'],
-                ['id' => 'vendors', 'name' => 'Поставщики'],
-                ['id' => 'subvendors', 'name' => 'Изготовители/Субпоставщики'],
-                ['id' => 'inspectors', 'name' => 'Инспекторы'],
-                ['id' => 'curators', 'name' => 'Кураторы'],
-                ['id' => 'statuses', 'name' => 'Статусы'],
+                ['id' => 'Department', 'name' => 'УИК'],
+                ['id' => 'Client', 'name' => 'Заказчики'],
+                ['id' => 'Vendor', 'name' => 'Поставщики'],
+                ['id' => 'Subvendor', 'name' => 'Изготовители/Субпоставщики'],
+                ['id' => 'Inspector', 'name' => 'Инспекторы'],
+                ['id' => 'Curator', 'name' => 'Кураторы'],
+                ['id' => 'Status', 'name' => 'Статусы'],
 
             ],
         ]);
