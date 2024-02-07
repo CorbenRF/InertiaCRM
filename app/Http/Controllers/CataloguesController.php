@@ -28,7 +28,7 @@ class CataloguesController extends Controller
 
         $catalogue = $currentCatalogue ?
         strtr($output_string, $values)::query()
-        ->paginate(5)->withQueryString()
+        ->paginate(4)->withQueryString()
         ->through(function ($entry) {
             return [
                 'id' => $entry->id,

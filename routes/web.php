@@ -58,6 +58,10 @@ Route::get('catalogues', [CataloguesController::class, 'index'])
     ->name('catalogues')
     ->middleware('auth');
 
+Route::get('catalogues/get', [CataloguesController::class, 'get'])
+->name('catalogues.get')
+->middleware('auth');
+
 Route::get('history', [HistoryController::class, 'index'])
     ->name('history')
     ->middleware('auth');
