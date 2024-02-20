@@ -58,9 +58,17 @@ class ClientsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, clients $clients)
+    public function update(Client $client)
     {
-        //
+        $client->update(
+
+            Request::validate([
+                'name' => ['required', 'max:50'], // todo: unique entry_num as well as client_name
+                'id' => ['required'],
+            ])
+        );
+
+        return Redirect::back()->with('success', 'client entry updated.');
     }
 
     /**

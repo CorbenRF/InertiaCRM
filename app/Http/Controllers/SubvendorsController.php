@@ -58,9 +58,17 @@ class SubvendorsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, subvendors $subvendors)
+    public function update(Subvendor $subvendor)
     {
-        //
+        $subvendor->update(
+
+            Request::validate([
+                'name' => ['required', 'max:50'], // todo: unique entry_num as well as subvendor_name
+                'id' => ['required'],
+            ])
+        );
+
+        return Redirect::back()->with('success', 'subvendor entry updated.');
     }
 
     /**

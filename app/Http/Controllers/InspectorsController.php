@@ -58,9 +58,17 @@ class InspectorsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, inspectors $inspectors)
+    public function update(Inspector $inspector)
     {
-        //
+        $inspector->update(
+
+            Request::validate([
+                'name' => ['required', 'max:50'], // todo: unique entry_num as well as inspector_name
+                'id' => ['required'],
+            ])
+        );
+
+        return Redirect::back()->with('success', 'inspector entry updated.');
     }
 
     /**

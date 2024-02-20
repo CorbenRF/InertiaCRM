@@ -58,9 +58,17 @@ class VendorsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, vendors $vendors)
+    public function update(Vendor $vendor)
     {
-        //
+        $vendor->update(
+
+            Request::validate([
+                'name' => ['required', 'max:50'], // todo: unique entry_num as well as vendor_name
+                'id' => ['required'],
+            ])
+        );
+
+        return Redirect::back()->with('success', 'vendor entry updated.');
     }
 
     /**

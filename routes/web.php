@@ -62,6 +62,38 @@ Route::get('catalogues/get', [CataloguesController::class, 'get'])
 ->name('catalogues.get')
 ->middleware('auth');
 
+// here i define all of the update paths for each individual catalogue
+
+Route::put('Client/{client}', [ClientsController::class, 'update'])
+    ->name('clients.update')
+    ->middleware('auth');
+
+Route::put('Department/{department}', [DepartmentsController::class, 'update'])
+->name('departments.update')
+->middleware('auth');
+
+Route::put('Vendor/{vendor}', [VendorsController::class, 'update'])
+    ->name('vendors.update')
+    ->middleware('auth');
+
+Route::put('Subvendor/{subvendor}', [SubvendorsController::class, 'update'])
+->name('Subvendors.update')
+->middleware('auth');
+
+Route::put('Inspector/{inspector}', [InspectorsController::class, 'update'])
+->name('inspectors.update')
+->middleware('auth');
+
+Route::put('Curator/{curator}', [CuratorsController::class, 'update'])
+    ->name('curators.update')
+    ->middleware('auth');
+
+Route::put('Status/{status}', [StatusesController::class, 'update'])
+->name('statuses.update')
+->middleware('auth');
+
+// END OF CATALOGUES UPDATE SECTION
+
 Route::get('history', [HistoryController::class, 'index'])
     ->name('history')
     ->middleware('auth');

@@ -58,9 +58,17 @@ class CuratorsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, curators $curators)
+    public function update(Curator $curator)
     {
-        //
+        $curator->update(
+
+            Request::validate([
+                'name' => ['required', 'max:50'], // todo: unique entry_num as well as curator_name
+                'id' => ['required'],
+            ])
+        );
+
+        return Redirect::back()->with('success', 'curator entry updated.');
     }
 
     /**

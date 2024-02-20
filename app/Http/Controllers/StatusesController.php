@@ -58,9 +58,17 @@ class StatusesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, statuses $statuses)
+    public function update(Status $status)
     {
-        //
+        $status->update(
+
+            Request::validate([
+                'name' => ['required', 'max:50'], // todo: unique entry_num as well as status_name
+                'id' => ['required'],
+            ])
+        );
+
+        return Redirect::back()->with('success', 'status entry updated.');
     }
 
     /**

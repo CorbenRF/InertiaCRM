@@ -58,9 +58,17 @@ class DepartmentsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, departments $departments)
+    public function update(Department $department)
     {
-        //
+        $department->update(
+
+            Request::validate([
+                'name' => ['required', 'max:50'], // todo: unique entry_num as well as department_name
+                'id' => ['required'],
+            ])
+        );
+
+        return Redirect::back()->with('success', 'department entry updated.');
     }
 
     /**

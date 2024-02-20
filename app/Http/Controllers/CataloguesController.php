@@ -12,7 +12,7 @@ use App\Models\Subvendor;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CataloguesController extends Controller
@@ -103,9 +103,19 @@ class CataloguesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, catalogues $catalogues)
+    public function update(Request $request)
     {
-        //
+        error_log($request->id); // Client
+        $value = $request->id;
+        $output_string = 'App\Models\$value';
+        $values = array( '$value' => $request->id);
+        error_log(strtr($output_string, $values)); // App/Models/Client
+
+        $catalogue = strtr($output_string, $values);
+
+        eval("$value entry->update()");
+
+        return Redirect::back()->with('success', 'entry updated.');
     }
 
     /**
