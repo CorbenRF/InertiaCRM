@@ -74,8 +74,10 @@ class InspectorsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(inspectors $inspectors)
+    public function destroy(Inspector $inspector)
     {
-        //
+        $inspector->delete();
+
+        return Redirect::back()->with('success', 'inspector deleted.');
     }
 }

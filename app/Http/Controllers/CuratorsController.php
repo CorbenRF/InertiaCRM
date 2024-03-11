@@ -74,8 +74,10 @@ class CuratorsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(curators $curators)
+    public function destroy(Curator $curator)
     {
-        //
+        $curator->delete();
+
+        return Redirect::back()->with('success', 'curator deleted.');
     }
 }

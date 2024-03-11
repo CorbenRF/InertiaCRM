@@ -74,8 +74,10 @@ class StatusesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(statuses $statuses)
+    public function destroy(Status $status)
     {
-        //
+        $status->delete();
+
+        return Redirect::back()->with('success', 'status deleted.');
     }
 }

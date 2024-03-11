@@ -74,8 +74,10 @@ class ClientsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(clients $clients)
+    public function destroy(Client $client)
     {
-        //
+        $client->delete();
+
+        return Redirect::back()->with('success', 'client deleted.');
     }
 }

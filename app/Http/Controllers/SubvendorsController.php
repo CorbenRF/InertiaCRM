@@ -74,8 +74,10 @@ class SubvendorsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(subvendors $subvendors)
+    public function destroy(Subvendor $subvendor)
     {
-        //
+        $subvendor->delete();
+
+        return Redirect::back()->with('success', 'subvendor deleted.');
     }
 }

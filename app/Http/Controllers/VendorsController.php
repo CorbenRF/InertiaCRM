@@ -74,8 +74,10 @@ class VendorsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(vendors $vendors)
+    public function destroy(Vendor $vendor)
     {
-        //
+        $vendor->delete();
+
+        return Redirect::back()->with('success', 'vendor deleted.');
     }
 }

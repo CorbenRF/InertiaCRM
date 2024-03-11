@@ -94,6 +94,38 @@ Route::put('Status/{status}', [StatusesController::class, 'update'])
 
 // END OF CATALOGUES UPDATE SECTION
 
+// here i define all of the delete paths for each individual catalogue
+
+Route::delete('Client/{client}', [ClientsController::class, 'destroy'])
+    ->name('clients.delete')
+    ->middleware('auth');
+
+Route::delete('Department/{department}', [DepartmentsController::class, 'destroy'])
+->name('departments.delete')
+->middleware('auth');
+
+Route::delete('Vendor/{vendor}', [VendorsController::class, 'destroy'])
+    ->name('vendors.delete')
+    ->middleware('auth');
+
+Route::delete('Subvendor/{subvendor}', [SubvendorsController::class, 'destroy'])
+->name('Subvendors.delete')
+->middleware('auth');
+
+Route::delete('Inspector/{inspector}', [InspectorsController::class, 'destroy'])
+->name('inspectors.delete')
+->middleware('auth');
+
+Route::delete('Curator/{curator}', [CuratorsController::class, 'destroy'])
+    ->name('curators.delete')
+    ->middleware('auth');
+
+Route::delete('Status/{status}', [StatusesController::class, 'destroy'])
+->name('statuses.delete')
+->middleware('auth');
+
+// END OF CATALOGUES delete SECTION
+
 Route::get('history', [HistoryController::class, 'index'])
     ->name('history')
     ->middleware('auth');
