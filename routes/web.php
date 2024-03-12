@@ -109,7 +109,7 @@ Route::delete('Vendor/{vendor}', [VendorsController::class, 'destroy'])
     ->middleware('auth');
 
 Route::delete('Subvendor/{subvendor}', [SubvendorsController::class, 'destroy'])
-->name('Subvendors.delete')
+->name('subvendors.delete')
 ->middleware('auth');
 
 Route::delete('Inspector/{inspector}', [InspectorsController::class, 'destroy'])
@@ -125,6 +125,8 @@ Route::delete('Status/{status}', [StatusesController::class, 'destroy'])
 ->middleware('auth');
 
 // END OF CATALOGUES delete SECTION
+
+
 
 Route::get('history', [HistoryController::class, 'index'])
     ->name('history')
@@ -226,5 +228,57 @@ Route::get('subvendors', [SubvendorsController::class, 'index'])
 Route::post('subvendors', [SubvendorsController::class, 'store'])
 ->name('subvendors.store')
 ->middleware('auth');
+
+// here i define all of the post/create-new paths for each individual catalogue
+Route::get('Client', [ClientsController::class, 'index'])
+->name('clients')
+->middleware('auth');
+Route::post('Client', [ClientsController::class, 'store'])
+->name('clients.store')
+->middleware('auth');
+
+Route::get('Department', [DepartmentsController::class, 'index'])
+->name('departments')
+->middleware('auth');
+Route::post('Department', [DepartmentsController::class, 'store'])
+->name('departments.store')
+->middleware('auth');
+
+Route::get('Vendor', [VendorsController::class, 'index'])
+->name('vendors')
+->middleware('auth');
+Route::post('Vendor', [VendorsController::class, 'store'])
+    ->name('vendors.store')
+    ->middleware('auth');
+
+Route::get('Subvendor', [SubvendorsController::class, 'index'])
+->name('subvendors')
+->middleware('auth');
+Route::post('Subvendor', [SubvendorsController::class, 'store'])
+->name('subvendors.store')
+->middleware('auth');
+
+Route::get('Inspector', [InspectorsController::class, 'index'])
+->name('inspectors')
+->middleware('auth');
+Route::post('Inspector', [InspectorsController::class, 'store'])
+->name('inspectors.store')
+->middleware('auth');
+
+Route::get('Curator', [CuratorsController::class, 'index'])
+->name('curators')
+->middleware('auth');
+Route::post('Curator', [CuratorsController::class, 'store'])
+->name('curators.store')
+->middleware('auth');
+
+Route::get('Status', [StatusesController::class, 'index'])
+->name('statuses')
+->middleware('auth');
+Route::post('Status', [StatusesController::class, 'store'])
+->name('statuses.store')
+->middleware('auth');
+
+// END OF CATALOGUES post/create-new SECTION
 
 require __DIR__.'/auth.php';

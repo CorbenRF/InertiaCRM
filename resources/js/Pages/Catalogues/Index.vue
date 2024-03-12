@@ -63,10 +63,24 @@
             </td>
           </tr>
 
-          <tr>
+          <tr v-if="isNewEntryVisible">
+            <td colspan="2">
+                <form class="input-group" @submit.prevent="console.log(`create success: ${this.entryToCreate}`)">
+                    <input class="form-control" type="text" v-model="this.entryToCreate" placeholder="Введите новую запись...">
+                    <span class="input-group-text" v-if="this.entryToCreate" @click.capture="createNewCatalogueEntry">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-square" viewBox="0 0 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                        </svg>
+                    </span>
+                </form>
+            </td>
+          </tr>
+
+          <tr v-show="this.currentCatalogue">
             <td colspan="2" class="table__btn-new">
             <div style="display:flex; justify-content: center;">
-                <button type="button" class="input-group-text btn btn-primary" style="width:fit-content">
+                <button type="button" class="input-group-text btn btn-primary" style="width:fit-content" @click="this.isNewEntryVisible = !this.isNewEntryVisible">
                     Создать новую запись в каталоге {{ this.currentCatalogue.name }}
                 </button>
             </div>
@@ -111,8 +125,10 @@ export default {
         return {
             showEdit: false,
             showDelDialogue: false,
+            isNewEntryVisible: false,
             entryToEdit: '',
             entryToDelete: '',
+            entryToCreate: '',
             currentCatalogue: new URLSearchParams(window.location.search).has('catalogue') ?
             {
                 id: new URLSearchParams(window.location.search).get('catalogue'),
@@ -150,6 +166,25 @@ export default {
             }
             this.showDelDialogue = false;
             this.entryToDelete = '';
+        },
+        async createNewCatalogueEntry() {
+            console.log('new entry: ', this.entryToCreate, 'created in ', this.currentCatalogue);
+
+            const tag = {
+            name: this.entryToCreate,
+            id: 0,
+            };
+            // this.innerLoading = true;
+
+
+            const result = axios.post(`${this.currentCatalogue.id}`, tag)
+            .then((response) => {
+                console.log('result of inertia posting is: ', response.data);
+                router.reload();
+            });
+
+            this.entryToCreate = '';
+            this.isNewEntryVisible = false;
         },
     },
     mounted() {
