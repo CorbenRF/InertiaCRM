@@ -28,7 +28,7 @@ export default {
 .modal-custom-confirm {
   position: relative;
   padding: 3rem !important;
-  height: 50%;
+  height: auto;
   border: 1px blue solid;
   border-radius: 40px;
   // background-color: rgba($color: #555, $alpha: 0.2);

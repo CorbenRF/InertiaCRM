@@ -65,7 +65,7 @@
 
           <tr v-if="isNewEntryVisible">
             <td colspan="2">
-                <form class="input-group" @submit.prevent="console.log(`create success: ${this.entryToCreate}`)">
+                <form class="input-group" @submit.prevent="createNewCatalogueEntry">
                     <input class="form-control" type="text" v-model="this.entryToCreate" placeholder="Введите новую запись...">
                     <span class="input-group-text" v-if="this.entryToCreate" @click.capture="createNewCatalogueEntry">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-square" viewBox="0 0 16 16">
@@ -95,13 +95,20 @@
         </AppLayout>
         <dialogueModal v-if="showDelDialogue" @answer="getAnswer" @close="this.showDelDialogue = false">
             <div class="dialogue__modal">
-            <span class="dialogue__modal-msg"
+            <p class="dialogue__modal-msg"
                 >Вы уверены, что хотите удалить запись каталога:
                 <span class="dialogue__modal-bold">№ {{ entryToDelete.id }}</span> -
                 <span class="dialogue__modal-bold">{{ entryToDelete.name }}</span>
                 каталога:
-                <span class="dialogue__modal-bold">{{ currentCatalogue.name }}</span>
-            </span>
+                <span class="dialogue__modal-bold">{{ currentCatalogue.name }}?</span>
+
+            </p>
+            <p class="dialogue__modal-msg">
+                <i>УДАЛЕНИЕ ЗАПИСИ КАТАЛОГА ЭТО НЕОБРАТИМЫЙ ПРОЦЕСС И ПРИВЕДЕТ К НЕМЕДЛЕННОМУ УДАЛЕНИЮ <b>ВСЕХ СВЯЗАННЫХ ЗАЯВОК!</b></i>
+            </p>
+            <p class="dialogue__modal-msg">
+                <i>ПОЖАЛУЙСТА УБЕДИТЕСЬ, ЧТО ДАННАЯ ЗАПИСЬ КАТАЛОГА <b>НЕ ИСПОЛЬЗУЕТСЯ</b> В ДЕЙСТВУЮЩИХ ЗАЯВКАХ!</i>
+            </p>
             </div>
         </dialogueModal>
     </div>
