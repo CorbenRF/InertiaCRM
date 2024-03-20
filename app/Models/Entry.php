@@ -13,11 +13,13 @@ use App\Models\Subvendor;
 use App\Models\Vendor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable; // owenIt audit history plugin initialization for entry model
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Entry extends Model
+class Entry extends Model implements Auditable // owenIt audit history plugin initialization for entry model
 {
+    use \OwenIt\Auditing\Auditable; // owenIt audit history plugin initialization for entry model
     use HasFactory;
 
     public $timestamps = FALSE;

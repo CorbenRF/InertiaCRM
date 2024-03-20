@@ -47,7 +47,6 @@ class CataloguesController extends Controller
                 ['id' => 'Inspector', 'name' => 'Инспекторы'],
                 ['id' => 'Curator', 'name' => 'Кураторы'],
                 ['id' => 'Status', 'name' => 'Статусы'],
-
             ],
         ]);
     }
