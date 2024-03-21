@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\History;
 use App\Models\Entry;
+use App\Models\User;
 use App\Models\Catalogue;
 use App\Models\Department;
 use App\Models\Client;
@@ -46,6 +47,7 @@ class HistoryController extends Controller
 
         return Inertia::render('History/Index', [
             'history' => $query,
+            'users' => User::get(),
         ]);
     }
 
