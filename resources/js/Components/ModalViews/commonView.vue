@@ -248,7 +248,6 @@ export default {
     };
   },
   computed: {
-
   },
   methods: {
     fetchCatalogues() {

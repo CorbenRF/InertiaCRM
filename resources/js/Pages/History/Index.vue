@@ -35,23 +35,23 @@
                                 <td>{{ row.auditable_item_id }}</td>
                                 <td>{{ this.getUserName(row.user_id) }}</td>
                                 <td>
-                                    <details v-if="Object.entries(row.old_values).length > 0">
+                                    <details v-if="Object.entries(row.old_values).length > 0 && this.loadingFinished">
                                         <summary>Развернуть</summary>
                                             <table border="1">
                                                 <tr v-for="[key, value] of Object.entries(row.old_values)" :key="key">
-                                                    <td>{{ this.db_legend(key) }}</td>
-                                                    <td>{{ value }}</td>
+                                                    <td>{{ this.db_legend(key, value).title }}</td>
+                                                    <td>{{ this.db_legend(key, value).value }}</td>
                                                 </tr>
                                             </table>
                                     </details>
                                 </td>
                                 <td>
-                                    <details v-if="Object.entries(row.new_values).length > 0">
+                                    <details v-if="Object.entries(row.new_values).length > 0 && this.loadingFinished">
                                         <summary>Развернуть</summary>
                                             <table border="1">
                                                 <tr v-for="[key, value] of Object.entries(row.new_values)" :key="key">
-                                                    <td>{{ this.db_legend(key) }}</td>
-                                                    <td>{{ value }}</td>
+                                                    <td>{{ this.db_legend(key, value).title }}</td>
+                                                    <td>{{ this.db_legend(key, value).value }}</td>
                                                 </tr>
                                             </table>
                                     </details>
@@ -70,6 +70,7 @@
 <script>
 // import InputError from '@/Components/InputError.vue';
 // import PrimaryButton from '@/Components/PrimaryButton.vue';
+import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
@@ -82,7 +83,8 @@ export default {
     mixins: [dateFunc],
     data() {
         return {
-
+            loadingFinished: false,
+            cataloguesData: '',
         };
     },
     computed: {
@@ -91,51 +93,60 @@ export default {
         },
     },
     methods: {
+        fetchCatalogues() {
+            this.loadingFinished = false;
+            axios.get(this.route('catalogues.get'))
+            .then((response) => {
+                this.cataloguesData = response.data.catalogues;
+                this.loadingFinished = true;
+                console.log(response.data.catalogues);
+            });
+        },
         getUserName(custom_id) {
             const find_result = this.users.find(element => element.id === custom_id);
             return find_result ? find_result.name : null;
             // return null;
         },
-        db_legend(col_name) {
+        db_legend(col_name, col_value) {
             switch (col_name) {
                 case 'client_entry_num':
-                    return 'Номер заявки';
+                    return { title: 'Номер заявки', value: col_value };
                 case 'date_received':
-                    return 'Дата получения';
+                    return { title: 'Дата получения', value: col_value };
                 case 'date_startby':
-                    return 'Дата начала по заявке';
+                    return { title: 'Дата начала по заявке', value: col_value };
                 case 'date_actual_start':
-                    return 'Фактическая дата начала';
+                    return { title: 'Фактическая дата начала', value: col_value };
                 case 'date_end':
-                    return 'Дата окончания';
+                    return { title: 'Дата окончания', value: col_value };
                 case 'department_id':
-                    return 'УИК';
+                    return { title: 'УИК', value: this.cataloguesData.departments.find((element) => element.id == col_value).name };
                 case 'client_name_id':
-                    return 'Заказчик';
+                    return { title: 'Заказчик', value: this.cataloguesData.clients.find((element) => element.id == col_value).name };
                 case 'vendor_name_id':
-                    return 'Поставщик';
+                    return { title: 'Поставщик', value: this.cataloguesData.vendors.find((element) => element.id == col_value).name };
                 case 'subvendor_name_id':
-                    return 'Субпоставщик';
+                    return { title: 'Субпоставщик', value: this.cataloguesData.subvendors.find((element) => element.id == col_value).name };
                 case 'status_id':
-                    return 'Статус';
+                    return { title: 'Статус', value: this.cataloguesData.statuses.find((element) => element.id == col_value).name };
                 case 'curator_id':
-                    return 'Куратор';
+                    return { title: 'Куратор', value: this.cataloguesData.curators.find((element) => element.id == col_value).name };
                 case 'inspector_id':
-                    return 'Инспектор';
+                    return { title: 'Инспектор', value: this.cataloguesData.inspectors.find((element) => element.id == col_value).name };
                 case 'expired':
-                    return 'Просрочена';
+                    return { title: 'Просрочена', value: col_value ? 'Да' : 'Нет' };
                 case 'comments':
-                    return 'Комментарии';
+                    return { title: 'Комментарии', value: col_value };
                 case 'inspection_lvl':
-                    return 'Уровень инспекции';
+                    return { title: 'Ур. инспекции', value: col_value };
                 default:
-                    return col_name;
+                    return { title: col_name, value: col_value};
             }
         },
     },
     mounted() {
-        // console.log('entries:', this.entries);
-    },
+    this.fetchCatalogues();
+  },
 }
 
 </script>
