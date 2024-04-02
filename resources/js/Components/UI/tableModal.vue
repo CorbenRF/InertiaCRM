@@ -122,6 +122,7 @@
 
 <script>
 /* eslint-disable */
+import axios from 'axios';
 import serverFunc from '@/mixins/serverFunc.vue';
 import dateFunc from '@/mixins/dateFunc.vue';
 import dialogueModal from './dialogueModal.vue';
@@ -248,17 +249,31 @@ export default {
       this.currentClientName = this.entryData.client.name;
       this.currentEntryNum = this.entryData.client_entry_num;
     },
-    toggleEdit() {
-      if (!this.readOnly) {
+    async busyCheck() {
+        // this.loadingFinished = false;
+            const response = await axios.get(`entries/${this.entryServerData.id}/isbusy`);
+            if(response.status == 200) {
+                return response.data.isbusy;
+            } else {
+                console.log(response);
+            }
+
+    },
+    async toggleEdit() {
+        const isEntryBusy = await this.busyCheck();
+        console.log('check if busy: ', isEntryBusy);
+    if(!isEntryBusy) {
+        if (!this.readOnly) {
         this.forceRerender();
         console.log('forcing update');
       }
+      console.log('toggling readOnly');
       this.readOnly = !this.readOnly;
+    } else {
+        console.log('entry is busy being edited by another user');
+    };
+
     },
-    // setDate(obj) {
-    //   console.log(obj);
-    //   this.entryData[obj.title] = obj.transformedDate;
-    // },
   },
   async created() {
     if (this.id) {

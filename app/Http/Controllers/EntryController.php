@@ -243,7 +243,17 @@ class EntryController extends Controller
         return Redirect::back()->with('success', 'entry updated.');
     }
 
+    public function isbusy(Entry $entry)
+    {
+        $check = [
+            'isbusy' => $entry->busy_edit,
+        ];
+        return response()->json($check);
+
+    }
     /**
+     *
+
      * Remove the specified resource from storage.
      */
     public function destroy(Entry $entry)

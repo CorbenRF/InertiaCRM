@@ -158,6 +158,10 @@ Route::delete('entries/{entry}', [EntryController::class, 'destroy'])
     ->name('entries.destroy')
     ->middleware('auth');
 
+Route::get('entries/{entry}/isbusy', [EntryController::class, 'isbusy'])
+->name('entries.isbusy')
+->middleware('auth');
+
 // entries end
 
 // Clients
