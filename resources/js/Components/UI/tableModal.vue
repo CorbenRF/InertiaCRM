@@ -4,7 +4,7 @@
     <div class="backdrop" @click.self="close">
       <div class="modal-custom container-md">
         <div class="container-fluid gx-0" :class="{ danger: entryData.busy_edit }">
-          <div class="row d-flex modal__ribbon">
+          <div class="row d-flex modal__ribbon" :class="{ danger: this.entryData.busy_edit }">
             <div class="ribbon__key">
               <strong v-if="id">{{ entryData.id }}</strong>
               <strong v-else>*</strong>
@@ -13,6 +13,8 @@
               <span v-if="id">
                 <strong>{{ currentClientName }}</strong> Заявка №
                 <strong>{{ currentEntryNum }}</strong>
+                -
+                <strong v-if="this.entryData.busy_edit">Занято другим пользователем</strong>
               </span>
               <span v-else>Создание новой заявки</span>
             </div>
@@ -45,7 +47,7 @@
                 v-if="id"
                 type="button"
                 class="btn buttons__delete"
-                @click="this.confirmVisible = true"
+                @click="askToDelete"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -153,7 +155,18 @@ export default {
       currentEntryNum: '',
     };
   },
+
   methods: {
+    async askToDelete() {
+      const isEntryBusy = await this.busyCheck();
+        console.log('check if busy: ', isEntryBusy);
+      if(!isEntryBusy) {
+        this.confirmVisible = true;
+      } else {
+        console.log('entry in use by another user');
+      }
+
+    },
     getAnswer(val) {
       this.confirmAnswer = val;
       this.confirmVisible = false;
@@ -262,13 +275,23 @@ export default {
     async toggleEdit() {
         const isEntryBusy = await this.busyCheck();
         console.log('check if busy: ', isEntryBusy);
-    if(!isEntryBusy) {
+    if(!isEntryBusy) { // flawed logic because entry is busy by myself and i cant un-busy it because it's busy
         if (!this.readOnly) {
-        this.forceRerender();
-        console.log('forcing update');
+            this.$inertia.post(`/entries/makebusy`, { id: this.entryServerData.id, busy: 0});
+            console.log('entry become not-busy - success');
+            this.readOnly = !this.readOnly;
+            this.forceRerender();
+            console.log('forcing update');
+
+      } else {
+        console.log('toggling readOnly');
+      this.$inertia.post(`/entries/makebusy`, { id: this.entryServerData.id, busy: 1});
+        console.log('entry become busy - success');
+        this.readOnly = !this.readOnly;
+
+
       }
-      console.log('toggling readOnly');
-      this.readOnly = !this.readOnly;
+
     } else {
         console.log('entry is busy being edited by another user');
     };

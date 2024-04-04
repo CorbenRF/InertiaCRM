@@ -237,6 +237,7 @@ class EntryController extends Controller
                 'date_actual_start' => ['nullable', 'date'],
                 'date_end' => ['nullable', 'date'],
                 'inspection_lvl' => ['required'],
+                'busy_edit' => ['bool'],
             ])
         );
 
@@ -251,6 +252,20 @@ class EntryController extends Controller
         return response()->json($check);
 
     }
+
+    public function makebusy(Request $request)
+    {
+        $entry = Entry::find(request()->id);
+        $entry->busy_edit = request()->busy;
+        $entry->save();
+
+        // $query = Entry::query();
+        // $query->where('id', 'like', '%' . request()->id . '%');
+        // $query->merge(['busy_edit' => request()->busy]);
+        return Redirect::back()->with('success', 'entry updated.');
+
+    }
+
     /**
      *
 

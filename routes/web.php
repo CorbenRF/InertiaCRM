@@ -162,6 +162,10 @@ Route::get('entries/{entry}/isbusy', [EntryController::class, 'isbusy'])
 ->name('entries.isbusy')
 ->middleware('auth');
 
+Route::post('entries/makebusy', [EntryController::class, 'makebusy'])
+->name('entries.makebusy')
+->middleware('auth');
+
 // entries end
 
 // Clients
