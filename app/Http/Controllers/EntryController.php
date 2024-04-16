@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Schedule;
 
 class EntryController extends Controller
 {
@@ -258,6 +259,11 @@ class EntryController extends Controller
         $entry = Entry::find(request()->id);
         $entry->busy_edit = request()->busy;
         $entry->save();
+
+        // Schedule::call(function () use ($entry) {
+        //     $entry->busy_edit = 0;
+        //     $entry->save();
+        // })->everyMinute();
 
         // $query = Entry::query();
         // $query->where('id', 'like', '%' . request()->id . '%');

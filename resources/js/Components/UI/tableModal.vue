@@ -153,6 +153,7 @@ export default {
       confirmAnswer: null,
       currentClientName: '',
       currentEntryNum: '',
+      isEntryBusy: 0,
     };
   },
 
@@ -273,9 +274,9 @@ export default {
 
     },
     async toggleEdit() {
-        const isEntryBusy = await this.busyCheck();
-        console.log('check if busy: ', isEntryBusy);
-    if(!isEntryBusy) { // flawed logic because entry is busy by myself and i cant un-busy it because it's busy
+        // const isEntryBusy = await this.busyCheck();
+        // console.log('check if busy: ', isEntryBusy);
+    if(!this.isEntryBusy) { // flawed logic because entry is busy by myself and i cant un-busy it because it's busy
         if (!this.readOnly) {
             this.$inertia.post(`/entries/makebusy`, { id: this.entryServerData.id, busy: 0});
             console.log('entry become not-busy - success');
@@ -299,6 +300,8 @@ export default {
     },
   },
   async created() {
+    this.isEntryBusy = await this.busyCheck(); // checks busy_edit only once upon model creation
+    console.log('check if busy: ', this.isEntryBusy);
     if (this.id) {
     //   const res = await this.fetchEntry('entries', this.id);
     // this.entryData = this.organiseData(this.entryServerData);
