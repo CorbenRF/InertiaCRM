@@ -265,9 +265,7 @@ class EntryController extends Controller
         //     $entry->save();
         // })->everyMinute();
 
-        // $query = Entry::query();
-        // $query->where('id', 'like', '%' . request()->id . '%');
-        // $query->merge(['busy_edit' => request()->busy]);
+
         return Redirect::back()->with('success', 'entry updated.');
 
     }

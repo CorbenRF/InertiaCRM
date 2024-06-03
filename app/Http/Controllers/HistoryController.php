@@ -18,9 +18,11 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use OwenIt\Auditing\Models\Audit;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class HistoryController extends Controller
+class HistoryController extends Controller implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     /**
      * Display a listing of the resource.
      */
@@ -28,10 +30,10 @@ class HistoryController extends Controller
     {
         $entry = Entry::first();
         $audits = Audit::paginate(4);
-        // Get all associated Audits
-        // $all = $entry->audits;
 
-        // $query = $entry->audits()
+        // this sorts by id = 10
+        // $audits = Audit::where('auditable_id', '=', 10)->paginate(4);
+
         $query = $audits
         ->withQueryString()
         ->through(function ($item) {

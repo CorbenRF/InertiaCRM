@@ -13,8 +13,8 @@
               <span v-if="id">
                 <strong>{{ currentClientName }}</strong> Заявка №
                 <strong>{{ currentEntryNum }}</strong>
-                -
-                <strong v-if="this.entryData.busy_edit">Занято другим пользователем</strong>
+
+                <strong v-if="this.entryData.busy_edit">- Занято другим пользователем</strong>
               </span>
               <span v-else>Создание новой заявки</span>
             </div>
